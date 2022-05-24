@@ -60,3 +60,8 @@ class my_edit(Command):
         # This is a generic tab-completion function that iterates through the
         # content of the current directory.
         return self._tab_directory_content()
+
+
+class ls_selection(Command):
+    def execute(self):
+        self.fm.execute_command("echo \'" + "\n".join([f.relative_path for f in self.fm.thistab.get_selection()]) + "\'")
