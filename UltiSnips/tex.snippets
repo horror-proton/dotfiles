@@ -1,0 +1,53 @@
+snippet \begin "\begin{} ... \end{}" bA
+\begin{$1}
+    $0
+\end{$1}
+endsnippet
+
+snippet \[ "Displaymath" wA
+\[
+    $1
+\]$0
+endsnippet
+
+snippet \fr "\frac{}{}" iA
+\\frac{${1}}{${2}}$0
+endsnippet
+
+snippet \hb "hbar" iA
+\\hbar
+endsnippet
+
+snippet sq "square" i
+^2
+endsnippet
+
+snippet '(?<![\s\&\^_\(\[\{])=' "equal" irA
+ = 
+endsnippet
+snippet '(?<![\s\^_\(\[\{])\+' "plus" irA
+ + 
+endsnippet
+snippet '(?<![\s\^_\(\[\{])-' "subtract" irA
+ - 
+endsnippet
+
+
+snippet $ "inline math" iA
+\$$1\$$0
+endsnippet
+snippet ( "" iA
+($1)$0
+endsnippet
+snippet '(?<!\\)\[' "" irA
+[$1]$0
+endsnippet
+snippet '(?<!\\)\{' "" irA
+{$1}$0
+endsnippet
+
+
+snippet \dd "" iA
+\\dd{$1}$0
+endsnippet
+

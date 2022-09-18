@@ -31,6 +31,8 @@ let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 let g:UltiSnipsEditSplit="vertical"
 
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
 Plug 'lervag/vimtex'
 let g:vimtex_view_method='general'
 let g:vimtex_view_general_viewer='SumatraPDF'
