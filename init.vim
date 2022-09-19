@@ -23,4 +23,5 @@ filetype plugin indent on
 syntax enable
 
 lua require('plugins')
+lua require('config/lspconfig')
 
