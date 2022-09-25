@@ -93,6 +93,18 @@ if cmp then
             { name = 'luasnip' },
             { name = 'omni' }, -- for vimtex
         },
+        sorting = {
+            comparators = {
+                cmp.config.compare.offset,
+                cmp.config.compare.exact,
+                cmp.config.compare.recently_used,
+                require("clangd_extensions.cmp_scores"),
+                cmp.config.compare.kind,
+                cmp.config.compare.sort_text,
+                cmp.config.compare.length,
+                cmp.config.compare.order,
+            },
+        },
     }
 end
 --
@@ -126,6 +138,8 @@ require 'lspconfig'.sumneko_lua.setup {
 
 require("clangd_extensions").setup {
     server = {
+        on_attach = on_attach,
+        flags = lsp_flags,
         -- options to pass to nvim-lspconfig
         -- i.e. the arguments to require("lspconfig").clangd.setup({})
     },
@@ -193,4 +207,12 @@ require("clangd_extensions").setup {
             border = "none",
         },
     },
+}
+
+-- paru -S python-lsp-server
+-- paru -S yapf
+-- paru -S python-pycodestyle
+require 'lspconfig'.pylsp.setup {
+    on_attach = on_attach,
+    flags = lsp_flags,
 }
