@@ -45,7 +45,7 @@ return require('packer').startup {
 
         use {
             'neovim/nvim-lspconfig',
-            config = [[require('plugins/nvim-lspconfig')]],
+            config = [[require('plugins.nvim-lspconfig')]],
         }
 
         use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
@@ -87,15 +87,21 @@ return require('packer').startup {
         use {
             'kyazdani42/nvim-tree.lua',
             tag = 'nightly',
-            config = function()
-                require('nvim-tree').setup()
-            end
+            config = [[require('plugins.nvim-tree')]],
         }
 
         use {
             'noib3/nvim-cokeline',
-            config = [[require('plugins/nvim-cokeline')]],
+            config = [[require('plugins.nvim-cokeline')]],
             after = 'nord.nvim',
+        }
+
+        use {
+            "akinsho/toggleterm.nvim",
+            tag = '*',
+            config = function()
+                require("toggleterm").setup()
+            end
         }
 
         use {

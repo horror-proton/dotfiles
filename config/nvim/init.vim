@@ -12,6 +12,8 @@ set smarttab
 set showbreak=↪\ 
 set list listchars=tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precedes:⟨,space:•
 
+set mouse=a
+
 set conceallevel=2
 
 let g:python3_host_prog='/usr/sbin/python3'

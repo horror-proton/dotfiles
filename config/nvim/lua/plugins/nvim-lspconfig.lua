@@ -215,4 +215,13 @@ require("clangd_extensions").setup {
 require 'lspconfig'.pylsp.setup {
     on_attach = on_attach,
     flags = lsp_flags,
+    settings = {
+        pylsp = {
+            plugins = {
+                pycodestyle = {
+                    maxLineLength = 120
+                }
+            }
+        }
+    }
 }
