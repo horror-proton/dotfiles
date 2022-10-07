@@ -48,7 +48,22 @@ return require('packer').startup {
             config = [[require('plugins.nvim-lspconfig')]],
         }
 
-        use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
+        use {
+            'hrsh7th/nvim-cmp',
+            config = function()
+                local cmp = require('cmp')
+                if cmp ~= nil then
+                    cmp.setup({
+                        preselect = cmp.PreselectMode.Item,
+                        window = {
+                            -- completion = cmp.config.window.bordered(),
+                            documentation = cmp.config.window.bordered(),
+                        },
+                    })
+                end
+            end,
+        }
+
         use 'hrsh7th/cmp-nvim-lsp' -- LSP source for nvim-cmp
         use 'saadparwaiz1/cmp_luasnip' -- Snippets source for nvim-cmp
         use 'L3MON4D3/LuaSnip' -- Snippets plugin
@@ -58,6 +73,12 @@ return require('packer').startup {
         use {
             'p00f/clangd_extensions.nvim'
             -- configured in in plugins/nvim-lspconfig.lua
+        }
+
+        use {
+            "glepnir/lspsaga.nvim",
+            branch = "main",
+            config = [[require('plugins.lspsaga_nvim')]],
         }
 
         -- ref: https://ejmastnak.github.io/tutorials/vim-latex/intro.html
@@ -89,6 +110,12 @@ return require('packer').startup {
             tag = 'nightly',
             config = [[require('plugins.nvim-tree')]],
         }
+
+        use({
+            'glepnir/galaxyline.nvim',
+            branch = 'main',
+            config = [[require('plugins.galaxyline_nvim')]],
+        })
 
         use {
             'noib3/nvim-cokeline',

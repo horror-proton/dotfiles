@@ -140,6 +140,18 @@ require("clangd_extensions").setup {
     server = {
         on_attach = on_attach,
         flags = lsp_flags,
+        cmd = {
+            "clangd",
+            "--background-index",
+            "--clang-tidy",
+            "--enable-config",
+            "--fallback-style=llvm",
+            "--all-scopes-completion",
+            "--completion-style=detailed",
+            "--header-insertion=iwyu",
+            "--header-insertion-decorators",
+            "--pch-storage=memory",
+        },
         -- options to pass to nvim-lspconfig
         -- i.e. the arguments to require("lspconfig").clangd.setup({})
     },
@@ -207,6 +219,11 @@ require("clangd_extensions").setup {
             border = "none",
         },
     },
+}
+
+require 'lspconfig'.rust_analyzer.setup {
+    on_attach = on_attach,
+    flags = lsp_flags,
 }
 
 -- paru -S python-lsp-server
