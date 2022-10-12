@@ -18,6 +18,11 @@ return require('packer').startup {
     function(use)
 
         use {
+            "windwp/nvim-autopairs",
+            config = [[require("plugins.nvim-autopairs")]]
+        }
+
+        use {
             "kylechui/nvim-surround",
             config = function()
                 require("nvim-surround").setup()
@@ -66,7 +71,10 @@ return require('packer').startup {
 
         use 'hrsh7th/cmp-nvim-lsp' -- LSP source for nvim-cmp
         use 'saadparwaiz1/cmp_luasnip' -- Snippets source for nvim-cmp
-        use 'L3MON4D3/LuaSnip' -- Snippets plugin
+
+        use { 'L3MON4D3/LuaSnip',
+            config = [[require('plugins.luasnip')]]
+        }
 
         use 'hrsh7th/cmp-omni'
 
