@@ -57,15 +57,13 @@ return require('packer').startup {
             'hrsh7th/nvim-cmp',
             config = function()
                 local cmp = require('cmp')
-                if cmp ~= nil then
-                    cmp.setup({
-                        preselect = cmp.PreselectMode.Item,
-                        window = {
-                            -- completion = cmp.config.window.bordered(),
-                            documentation = cmp.config.window.bordered(),
-                        },
-                    })
-                end
+                cmp.setup({
+                    preselect = cmp.PreselectMode.Item,
+                    window = {
+                        -- completion = cmp.config.window.bordered(),
+                        documentation = cmp.config.window.bordered(),
+                    },
+                })
             end,
         }
 
@@ -81,6 +79,26 @@ return require('packer').startup {
         use {
             'p00f/clangd_extensions.nvim'
             -- configured in in plugins/nvim-lspconfig.lua
+        }
+
+        use {
+            'simrat39/rust-tools.nvim',
+            config = [[require('plugins.rust-tools_nvim')]],
+        }
+
+        use {
+            'nvim-treesitter/nvim-treesitter',
+            config = function()
+                require("nvim-treesitter.install").prefer_git = true
+                require 'nvim-treesitter.configs'.setup {
+                    ensure_install = { "lua", "cpp", "rust", "python" },
+                    sync_install = true,
+                    auto_install = false,
+                    highlight = {
+                        enable = true,
+                    },
+                }
+            end,
         }
 
         use {
@@ -119,11 +137,12 @@ return require('packer').startup {
             config = [[require('plugins.nvim-tree')]],
         }
 
-        use({
+        use {
             'glepnir/galaxyline.nvim',
             branch = 'main',
             config = [[require('plugins.galaxyline_nvim')]],
-        })
+            after = 'nord.nvim',
+        }
 
         use {
             'noib3/nvim-cokeline',

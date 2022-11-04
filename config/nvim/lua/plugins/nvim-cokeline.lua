@@ -16,6 +16,9 @@ require('cokeline').setup {
             },
         }
     },
+    buffers = {
+        focus_on_delete = 'next',
+    },
     components = {
         {
             text = function(buffer) return ((buffer.index ~= 1) and '|' or ' ') .. '' end,
@@ -71,3 +74,12 @@ require('cokeline').setup {
         },
     },
 }
+
+-- overwrite function in cokeline.setup to force redraw after a bdelete
+vim.cmd [[
+    function! CokelineHandleCloseButtonClick(minwid, clicks, button, modifiers)
+        if a:button != 'l' | return | endif
+        execute printf('bdelete %s', a:minwid)
+        redraw!
+    endfunction
+]]

@@ -57,6 +57,13 @@ galaxyline.section.left[5] = {
 }
 
 galaxyline.section.left[6] = {
+    LineColumn = {
+        provider = 'LineColumn',
+        highlight = { colors.yellow, colors.bg },
+    },
+}
+
+galaxyline.section.left[7] = {
     DiagnosticError = {
         provider = 'DiagnosticError',
         icon = '  ',
@@ -64,7 +71,7 @@ galaxyline.section.left[6] = {
     },
 }
 
-galaxyline.section.left[7] = {
+galaxyline.section.left[8] = {
     DiagnosticWarn = {
         provider = 'DiagnosticWarn',
         icon = '  ',
@@ -72,7 +79,7 @@ galaxyline.section.left[7] = {
     },
 }
 
-galaxyline.section.left[8] = {
+galaxyline.section.left[9] = {
     DiagnosticHint = {
         icon = '  ',
         provider = 'DiagnosticHint',
@@ -80,7 +87,7 @@ galaxyline.section.left[8] = {
     },
 }
 
-galaxyline.section.left[9] = {
+galaxyline.section.left[10] = {
     DiagnosticInfo = {
         icon = '  ',
         provider = 'DiagnosticInfo',
@@ -88,21 +95,17 @@ galaxyline.section.left[9] = {
     },
 }
 
-galaxyline.section.mid[1] = {
-    FileTypeName = {
-        provider = 'FileTypeName',
-    },
-}
-
 galaxyline.section.mid[3] = {
     GetLspClient = {
         provider = 'GetLspClient',
+        highlight = { colors.green, colors.bg },
     },
 }
 
-galaxyline.section.mid[2] = {
+galaxyline.section.mid[1] = {
     WhiteSpace = {
         provider = 'WhiteSpace',
+        highlight = { colors.bg, colors.bg },
     },
 }
 
@@ -175,3 +178,5 @@ galaxyline.section.right[7] = {
         highlight = { colors.blue, colors.bg },
     },
 }
+
+vim.api.nvim_set_hl(0, 'StatusLine', { bg = colors.bg, })
