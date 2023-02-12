@@ -47,6 +47,7 @@ local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver' }
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup {
         -- on_attach = my_custom_on_attach,
+        on_attach = on_attach,
         capabilities = capabilities,
     }
 end
@@ -111,7 +112,7 @@ end
 
 
 -- `paru -S lua-language-server`
-require 'lspconfig'.sumneko_lua.setup {
+require 'lspconfig'.lua_ls.setup {
     on_attach = on_attach,
     flags = lsp_flags,
     settings = {

@@ -23,6 +23,9 @@ syntax enable
 
 lua require('packer_nvim')
 
+setlocal spell spelllang=en_us,cjk
+set nospell
+
 " write buffer on Ctrl+S
 noremap <silent> <C-S>          :update<CR>
 vnoremap <silent> <C-S>         <C-C>:update<CR>
@@ -35,4 +38,4 @@ function! Formatonsave()
   let l:formatdiff = 1
   pyf /usr/share/clang/clang-format.py
 endfunction
-autocmd BufWritePre *.h,*.cc,*.cpp,*.hpp call Formatonsave()
+" autocmd BufWritePre *.h,*.cc,*.cpp,*.hpp call Formatonsave()
