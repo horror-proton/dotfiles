@@ -17,7 +17,7 @@ require('cokeline').setup {
         }
     },
     buffers = {
-        focus_on_delete = 'next',
+        -- focus_on_delete = 'next',
     },
     components = {
         {
@@ -74,6 +74,29 @@ require('cokeline').setup {
         },
     },
 }
+
+-- TODO: https://github.com/noib3/nvim-cokeline/issues/56
+function delete_curr_buffer()
+    local cbn = vim.api.nvim_get_current_buf()
+    local buffers = vim.fn.getbufinfo({ buflisted = true })
+    local size = 0
+    local idx = 0
+    for n, e in ipairs(buffers) do
+        size = size + 1
+        if e.bufnr == cbn then
+            idx = n
+        end
+    end
+
+    if idx == 0 then return end
+
+    if idx == size then
+        vim.cmd("bprevious")
+    else
+        vim.cmd("bnext")
+    end
+    vim.cmd("bdelete " .. cbn)
+end
 
 -- overwrite function in cokeline.setup to force redraw after a bdelete
 vim.cmd [[
