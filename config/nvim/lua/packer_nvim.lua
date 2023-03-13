@@ -16,7 +16,6 @@ return require('packer').startup {
     },
 
     function(use)
-
         use {
             "windwp/nvim-autopairs",
             config = [[require("plugins.nvim-autopairs")]]
@@ -67,7 +66,7 @@ return require('packer').startup {
             end,
         }
 
-        use 'hrsh7th/cmp-nvim-lsp' -- LSP source for nvim-cmp
+        use 'hrsh7th/cmp-nvim-lsp'     -- LSP source for nvim-cmp
         use 'saadparwaiz1/cmp_luasnip' -- Snippets source for nvim-cmp
 
         use { 'L3MON4D3/LuaSnip',
@@ -84,6 +83,11 @@ return require('packer').startup {
         use {
             'simrat39/rust-tools.nvim',
             config = [[require('plugins.rust-tools_nvim')]],
+        }
+
+        use {
+            "iamcco/markdown-preview.nvim",
+            run = function() vim.fn["mkdp#util#install"]() end,
         }
 
         use {
@@ -166,8 +170,8 @@ return require('packer').startup {
                     min_jump         = 2,
                     popup            = {
                         delay_ms = 0, -- delay before popup displays
-                        inc_ms = 10, -- time increments used for fade/resize effects
-                        blend = 10, -- starting blend, between 0-100 (fully transparent), see :h winblend
+                        inc_ms = 10,  -- time increments used for fade/resize effects
+                        blend = 10,   -- starting blend, between 0-100 (fully transparent), see :h winblend
                         width = 20,
                         winhl = "PMenu",
                         fader = require('specs').linear_fader,
@@ -180,6 +184,5 @@ return require('packer').startup {
                 }
             end
         }
-
     end
 }

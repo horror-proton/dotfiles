@@ -8,3 +8,5 @@ require('nvim-tree').setup {
         icons = { git_placement = 'after' },
     },
 }
+
+vim.keymap.set('n', '<C-t>', ':NvimTreeToggle<CR>')

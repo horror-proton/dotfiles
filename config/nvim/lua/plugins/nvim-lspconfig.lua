@@ -63,7 +63,7 @@ if cmp then
             end,
         },
         mapping = cmp.mapping.preset.insert({
-            ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+            ['<C-d>'] = cmp.mapping.scroll_docs( -4),
             ['<C-f>'] = cmp.mapping.scroll_docs(4),
             ['<C-Space>'] = cmp.mapping.complete(),
             ['<Tab>'] = cmp.mapping.confirm {
@@ -82,8 +82,8 @@ if cmp then
             ['<up>'] = cmp.mapping(function(fallback)
                 if cmp.visible() then
                     cmp.select_prev_item()
-                elseif luasnip.jumpable(-1) then
-                    luasnip.jump(-1)
+                elseif luasnip.jumpable( -1) then
+                    luasnip.jump( -1)
                 else
                     fallback()
                 end
@@ -248,7 +248,7 @@ require 'lspconfig'.rust_analyzer.setup {
 }
 
 -- paru -S python-lsp-server
--- paru -S yapf
+-- paru -S yapf python-whatthepatch python-toml
 -- paru -S python-pycodestyle
 require 'lspconfig'.pylsp.setup {
     on_attach = on_attach,
@@ -260,8 +260,9 @@ require 'lspconfig'.pylsp.setup {
                     maxLineLength = 120
                 }
             }
-        }
-    }
+        },
+    },
+    cmd = { "pylsp", "-v" },
 }
 
 require 'lspconfig'.cmake.setup {}
