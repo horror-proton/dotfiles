@@ -12,6 +12,7 @@ return require('packer').startup {
     config = {
         git = {
             depth = 100,
+            clone_timeout = 600,
         },
     },
 
@@ -132,6 +133,8 @@ return require('packer').startup {
                 require('gitsigns').setup()
             end
         }
+
+        use 'github/copilot.vim'
 
         use 'kyazdani42/nvim-web-devicons'
 

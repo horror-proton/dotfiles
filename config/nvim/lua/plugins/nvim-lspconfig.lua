@@ -63,14 +63,14 @@ if cmp then
             end,
         },
         mapping = cmp.mapping.preset.insert({
-            ['<C-d>'] = cmp.mapping.scroll_docs( -4),
+            ['<C-d>'] = cmp.mapping.scroll_docs(-4),
             ['<C-f>'] = cmp.mapping.scroll_docs(4),
             ['<C-Space>'] = cmp.mapping.complete(),
-            ['<Tab>'] = cmp.mapping.confirm {
+            ['<CR>'] = cmp.mapping.confirm {
                 behavior = cmp.ConfirmBehavior.Replace,
                 select = true,
             },
-            ['<down>'] = cmp.mapping(function(fallback)
+            ['<Tab>'] = cmp.mapping(function(fallback)
                 if cmp.visible() then
                     cmp.select_next_item()
                 elseif luasnip.expand_or_jumpable() then
@@ -79,11 +79,11 @@ if cmp then
                     fallback()
                 end
             end, { 'i', 's' }),
-            ['<up>'] = cmp.mapping(function(fallback)
+            ['<S-Tab>'] = cmp.mapping(function(fallback)
                 if cmp.visible() then
                     cmp.select_prev_item()
-                elseif luasnip.jumpable( -1) then
-                    luasnip.jump( -1)
+                elseif luasnip.jumpable(-1) then
+                    luasnip.jump(-1)
                 else
                     fallback()
                 end
@@ -201,7 +201,6 @@ require("clangd_extensions").setup {
                 statement = "",
                 ["template argument"] = "",
             },
-
             kind_icons = {
                 Compound = "",
                 Recovery = "",
@@ -211,7 +210,6 @@ require("clangd_extensions").setup {
                 TemplateTemplateParm = "",
                 TemplateParamObject = "",
             },
-
             highlights = {
                 detail = "Comment",
             },
@@ -268,3 +266,5 @@ require 'lspconfig'.pylsp.setup {
 require 'lspconfig'.cmake.setup {}
 
 require 'lspconfig'.bashls.setup {}
+
+require 'lspconfig'.tsserver.setup {}
