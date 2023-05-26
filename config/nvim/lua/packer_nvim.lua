@@ -74,7 +74,7 @@ return require('packer').startup {
             config = [[require('plugins.luasnip')]]
         }
 
-        -- use 'hrsh7th/cmp-omni' -- disabled due to https://github.com/hrsh7th/cmp-omni/issues/8
+        use 'hrsh7th/cmp-omni'
 
         use {
             'p00f/clangd_extensions.nvim'
