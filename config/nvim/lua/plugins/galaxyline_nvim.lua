@@ -164,7 +164,7 @@ galaxyline.section.right[6] = {
     FileSize = {
         provider = 'FileSize',
         highlight = { colors.violet, 'NONE' },
-        icon = '  ',
+        icon = ' 󰋊 ',
         separator = ' ',
         separator_highlight = { 'NONE', colors.darkblue },
     },

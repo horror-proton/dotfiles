@@ -50,8 +50,8 @@ require('cokeline').setup {
         },
         {
             text = function(buffer)
-                return (buffer.diagnostics.errors ~= 0 and ' ' .. buffer.diagnostics.errors)
-                    or (buffer.diagnostics.warnings ~= 0 and ' ' .. buffer.diagnostics.warnings)
+                return (buffer.diagnostics.errors ~= 0 and ' ' .. buffer.diagnostics.errors)
+                    or (buffer.diagnostics.warnings ~= 0 and ' ' .. buffer.diagnostics.warnings)
                     or ''
             end,
             fg = function(buffer)
@@ -62,7 +62,7 @@ require('cokeline').setup {
             truncation = { priority = 1, },
         },
         {
-            text = ' ',
+            text = ' ×',
             delete_buffer_on_left_click = true,
             truncation = { priority = 1, },
         },
