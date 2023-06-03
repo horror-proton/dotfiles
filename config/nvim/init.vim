@@ -21,7 +21,7 @@ let g:python3_host_prog='/usr/sbin/python3'
 filetype plugin indent on
 syntax enable
 
-lua require('packer_nvim')
+lua require('lazy_nvim')
 
 setlocal spell spelllang=en_us,cjk
 set nospell
