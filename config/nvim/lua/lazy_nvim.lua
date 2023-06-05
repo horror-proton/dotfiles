@@ -1,5 +1,3 @@
-local _M = {}
-
 local function bootstrap_lazy()
     local success, lazy = pcall(require, 'lazy')
     if success then return lazy end
