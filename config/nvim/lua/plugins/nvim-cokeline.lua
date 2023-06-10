@@ -1,11 +1,16 @@
-local get_hex = require('cokeline/utils').get_hex
+local get_hex    = require('cokeline/utils').get_hex
+
+local tab_bg     = get_hex('FloatShadow', 'bg');
+local tab_sel_bg = get_hex('Normal', 'bg');
+
+local line_bg    = get_hex('Tabline', 'bg')
 
 require('cokeline').setup {
     default_hl = {
         fg = function(buffer)
-            return buffer.is_focused and get_hex('Normall', 'fg') or get_hex('Comment', 'fg')
+            return buffer.is_focused and get_hex('TablineFill', 'fg') or get_hex('Tabline', 'fg')
         end,
-        bg = get_hex('ColorColumn', 'bg')
+        bg = tab_bg,
     },
     sidebar = {
         filetype = 'NvimTree',
@@ -21,9 +26,9 @@ require('cokeline').setup {
     },
     components = {
         {
-            text = function(buffer) return ((buffer.index ~= 1) and '|' or ' ') .. '' end,
-            fg = require('cokeline/utils').get_hex('ColorColumn', 'bg'),
-            bg = require('cokeline/utils').get_hex('Normal', 'bg'),
+            text = function(buffer) return ((buffer.index ~= 1) and '┃' or ' ') .. '' end,
+            fg = tab_bg,
+            bg = line_bg,
             truncation = { priority = 1, },
         },
         {
@@ -37,21 +42,28 @@ require('cokeline').setup {
         },
         {
             text = function(buffer)
-                return buffer.filename
+                return buffer.filename .. ' '
             end,
             style = function(buffer)
                 return ((buffer.is_focused and buffer.diagnostics.errors ~= 0)
-                    and 'bold,underline')
+                        and 'bold,underline')
                     or (buffer.is_focused and 'bold')
                     or (buffer.diagnostics.errors ~= 0 and 'underline')
                     or nil
+            end,
+            on_click = function(_, _, buttons, modifiers, buffer)
+                if buttons == 'm' and modifiers == '    ' then
+                    buffer:delete()
+                elseif buttons == 'l' then -- require('cokeline.handlers').default_click()
+                    vim.api.nvim_set_current_buf(buffer.number)
+                end
             end,
             truncation = { priority = 2, },
         },
         {
             text = function(buffer)
-                return (buffer.diagnostics.errors ~= 0 and ' ' .. buffer.diagnostics.errors)
-                    or (buffer.diagnostics.warnings ~= 0 and ' ' .. buffer.diagnostics.warnings)
+                return (buffer.diagnostics.errors ~= 0 and '⮾ ' .. buffer.diagnostics.errors)   -- 
+                    or (buffer.diagnostics.warnings ~= 0 and '⚠ ' .. buffer.diagnostics.warnings) -- 
                     or ''
             end,
             fg = function(buffer)
@@ -62,47 +74,15 @@ require('cokeline').setup {
             truncation = { priority = 1, },
         },
         {
-            text = ' ×',
+            text = '×',
             delete_buffer_on_left_click = true,
             truncation = { priority = 1, },
         },
         {
             text = '',
-            fg = get_hex('ColorColumn', 'bg'),
-            bg = get_hex('Normal', 'bg'),
+            fg = tab_bg,
+            bg = line_bg,
             truncation = { priority = 1, },
         },
     },
 }
-
--- TODO: https://github.com/noib3/nvim-cokeline/issues/56
-function delete_curr_buffer()
-    local cbn = vim.api.nvim_get_current_buf()
-    local buffers = vim.fn.getbufinfo({ buflisted = true })
-    local size = 0
-    local idx = 0
-    for n, e in ipairs(buffers) do
-        size = size + 1
-        if e.bufnr == cbn then
-            idx = n
-        end
-    end
-
-    if idx == 0 then return end
-
-    if idx == size then
-        vim.cmd("bprevious")
-    else
-        vim.cmd("bnext")
-    end
-    vim.cmd("bdelete " .. cbn)
-end
-
--- overwrite function in cokeline.setup to force redraw after a bdelete
-vim.cmd [[
-    function! CokelineHandleCloseButtonClick(minwid, clicks, button, modifiers)
-        if a:button != 'l' | return | endif
-        execute printf('bdelete %s', a:minwid)
-        redraw!
-    endfunction
-]]
