@@ -3,10 +3,20 @@ return {
 
     {
         'shaunsingh/nord.nvim',
+        enabled = false,
         lazy = false,
         priority = 1000,
         config = function()
-            vim.cmd([[colorscheme nord]])
+            -- vim.cmd([[colorscheme nord]])
+        end,
+    },
+
+    {
+        "folke/tokyonight.nvim",
+        lazy = false,
+        priority = 1000,
+        config = function()
+            vim.cmd([[colorscheme tokyonight]])
         end,
     },
 
@@ -45,14 +55,7 @@ return {
     {
         'hrsh7th/nvim-cmp',
         config = function()
-            local cmp = require('cmp')
-            cmp.setup({
-                preselect = cmp.PreselectMode.Item,
-                window = {
-                    -- completion = cmp.config.window.bordered(),
-                    documentation = cmp.config.window.bordered(),
-                },
-            })
+            -- configured in plugins.nvim-lspconfig
         end,
     },
 
@@ -60,18 +63,18 @@ return {
 
     { 'saadparwaiz1/cmp_luasnip' }, -- Snippets source for nvim-cmp
 
-
-
     {
         'L3MON4D3/LuaSnip',
-        config = function() require('plugins.luasnip') end,
+        config = function()
+            -- require('plugins.luasnip') -- run in plugins/nvim-lspconfig.lua
+        end,
     },
 
     { 'hrsh7th/cmp-omni' },
 
     {
         'p00f/clangd_extensions.nvim'
-        -- configured in in plugins/nvim-lspconfig.lua
+        -- configured in plugins/nvim-lspconfig.lua
     },
 
     {
