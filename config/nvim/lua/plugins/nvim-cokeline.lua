@@ -5,6 +5,17 @@ local tab_sel_bg = get_hex('Normal', 'bg');
 
 local line_bg    = get_hex('Tabline', 'bg')
 
+local click      = function(_, _, buttons, modifiers, buffer)
+    if buttons == 'm' and modifiers == '    ' then
+        buffer:delete()
+    elseif buttons == 'l' then -- require('cokeline.handlers').default_click()
+        if vim.api.nvim_buf_get_option(vim.api.nvim_get_current_buf(), 'buftype') == '' then
+            vim.api.nvim_set_current_buf(buffer.number)
+        end
+    end
+end
+
+
 require('cokeline').setup {
     default_hl = {
         fg = function(buffer)
@@ -26,9 +37,10 @@ require('cokeline').setup {
     },
     components = {
         {
-            text = function(buffer) return ((buffer.index ~= 1) and '┃' or ' ') .. '' end,
+            text = function(buffer) return ((buffer.index ~= 1) and '-' or ' ') .. '' end, --┃
             fg = tab_bg,
             bg = line_bg,
+            on_click = nil,
             truncation = { priority = 1, },
         },
         {
@@ -38,11 +50,12 @@ require('cokeline').setup {
             fg = function(buffer)
                 return buffer.devicon.color
             end,
+            on_click = click,
             truncation = { priority = 1, },
         },
         {
             text = function(buffer)
-                return buffer.filename .. ' '
+                return buffer.filename
             end,
             style = function(buffer)
                 return ((buffer.is_focused and buffer.diagnostics.errors ~= 0)
@@ -51,26 +64,21 @@ require('cokeline').setup {
                     or (buffer.diagnostics.errors ~= 0 and 'underline')
                     or nil
             end,
-            on_click = function(_, _, buttons, modifiers, buffer)
-                if buttons == 'm' and modifiers == '    ' then
-                    buffer:delete()
-                elseif buttons == 'l' then -- require('cokeline.handlers').default_click()
-                    vim.api.nvim_set_current_buf(buffer.number)
-                end
-            end,
+            on_click = click,
             truncation = { priority = 2, },
         },
         {
             text = function(buffer)
                 return (buffer.diagnostics.errors ~= 0 and '⮾ ' .. buffer.diagnostics.errors)   -- 
                     or (buffer.diagnostics.warnings ~= 0 and '⚠ ' .. buffer.diagnostics.warnings) -- 
-                    or ''
+                    or ' '
             end,
             fg = function(buffer)
                 return (buffer.diagnostics.errors ~= 0 and vim.g.terminal_color_1)
                     or (buffer.diagnostics.warnings ~= 0 and vim.g.terminal_color_3)
                     or nil
             end,
+            on_click = click,
             truncation = { priority = 1, },
         },
         {
@@ -82,6 +90,7 @@ require('cokeline').setup {
             text = '',
             fg = tab_bg,
             bg = line_bg,
+            on_click = nil,
             truncation = { priority = 1, },
         },
     },

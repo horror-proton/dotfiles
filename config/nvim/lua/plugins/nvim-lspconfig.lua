@@ -153,9 +153,9 @@ lspconfig.lua_ls.setup {
 }
 
 require("clangd_extensions").setup {
-    on_attach = attach,
-    capabilities = capabilities,
     server = {
+        on_attach = attach,
+        capabilities = capabilities,
         cmd = {
             "clangd",
             "--background-index",
