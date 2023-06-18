@@ -49,6 +49,8 @@ return {
             'hrsh7th/nvim-cmp',
             'hrsh7th/cmp-nvim-lsp',
             'saadparwaiz1/cmp_luasnip',
+            'hrsh7th/cmp-omni',
+            'onsails/lspkind.nvim'
         },
     },
 
@@ -57,6 +59,10 @@ return {
         config = function()
             -- configured in plugins.nvim-lspconfig
         end,
+    },
+
+    {
+        'onsails/lspkind.nvim',
     },
 
     { 'hrsh7th/cmp-nvim-lsp' },     -- LSP source for nvim-cmp
@@ -108,7 +114,7 @@ return {
         config = function() require('plugins.lspsaga_nvim') end,
     },
 
-    -- ref: https://ejmastnak.github.io/tutorials/vim-latex/intro.html
+    -- ref: https://www.ejmastnak.com/tutorials/vim-latex/intro/
     {
         'lervag/vimtex',
         config = function()

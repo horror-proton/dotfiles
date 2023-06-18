@@ -42,6 +42,7 @@ require('plugins.luasnip')
 
 -- nvim-cmp setup
 local cmp = require 'cmp'
+local lspkind = require('lspkind')
 if cmp then
     local luasnip = require 'luasnip'
     cmp.setup {
@@ -55,6 +56,7 @@ if cmp then
             -- completion = cmp.config.window.bordered(),
             documentation = cmp.config.window.bordered(),
         },
+
         mapping = cmp.mapping.preset.insert({
             ['<C-d>'] = cmp.mapping.scroll_docs(-4),
             ['<C-f>'] = cmp.mapping.scroll_docs(4),
@@ -109,6 +111,17 @@ if cmp then
                 cmp.config.compare.length,
                 cmp.config.compare.order,
             },
+        },
+        formatting = {
+            format = lspkind.cmp_format({
+                mode = "symbol_text",
+                menu = ({
+                    buffer = "[Buffer]",
+                    nvim_lsp = "[LSP]",
+                    luasnip = "[LuaSnip]",
+                    latex_symbols = "[Latex]",
+                })
+            }),
         },
     }
 end
