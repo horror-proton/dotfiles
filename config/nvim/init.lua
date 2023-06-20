@@ -15,13 +15,13 @@ opt.showbreak = '↪ '
 opt.list = true
 --opt.listchars = 'tab:╶─╴,eol:🢱,nbsp:␣,trail:•,extends:⟩,precedes:⟨,space:•'
 opt.listchars = {
-  tab = '╶─╴',
-  eol = '🞗', --↵🢱
-  nbsp = '␣',
-  trail = '•',
-  extends = '⟩',
-  precedes = '⟨',
-  space = '•',
+    tab = '╶─╴',
+    eol = '🞗', --↵🢱
+    nbsp = '␣',
+    trail = '•',
+    extends = '⟩',
+    precedes = '⟨',
+    space = '•',
 }
 
 opt.signcolumn = 'yes'
@@ -36,5 +36,22 @@ opt.mouse = 'a'
 
 vim.keymap.set({ '', 'i' }, '<C-s>', function() print(cmd('update')) end)
 
+-- store lsplog in tmpfs
+if vim.loop.os_uname().sysname == 'Linux' then
+    local tmplogpath = vim.fs.normalize('/tmp/nvim/lsp.log')
+    vim.fn.mkdir(vim.fs.dirname(tmplogpath), 'p')
+    local logpath = vim.lsp.get_log_path()
+    vim.fn.mkdir(vim.fs.dirname(logpath), 'p')
+    if not vim.loop.fs_stat(logpath) then
+        local lf, err = io.open(tmplogpath, 'a+')
+        assert(lf):write(string.format("Creating %s", tmplogpath))
+    else
+        if not vim.loop.fs_readlink(logpath) then
+            assert(vim.loop.fs_copyfile(logpath, tmplogpath))
+        end
+    end
+    os.remove(logpath)
+    assert(vim.loop.fs_symlink(tmplogpath, logpath))
+end
 
 require('lazy_nvim')
