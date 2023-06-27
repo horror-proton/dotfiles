@@ -42,6 +42,11 @@ include_arg() {
     [[ -f "$1" ]] && source "$1" "${@:1}"
 }
 
+check_bin() {
+    local _full_path
+    _full_path=$(command -v "$1")
+}
+
 typeset -U path # unique
 path=(
     ~/.local/bin
@@ -50,19 +55,25 @@ path=(
     $path
 )
 
-command -v nvim &> /dev/null && export EDITOR="nvim"
-command -v bat &> /dev/null && export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+check_bin nvim && export EDITOR="nvim"
+check_bin bat && export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 alias ls='ls --color=tty'
 
-alias l='exa -lah --icons --git --color-scale'
+check_bin exa && alias l='exa -lah --icons --git --color-scale' || alias l='ls -lAh'
 alias ll='ls -lh'
 alias la='ls -lAh'
 
 alias sudo='sudo '
 alias rm='rm --interactive=always'
-alias ra='ranger'
-alias c='clear'
+check_bin ranger && alias ra='ranger'
+
+if [ -z "$TMUX" ]
+then
+    alias c='clear'
+else
+    alias c='clear && tmux clear-history'
+fi
 
 alias egrep='grep -E --color=auto'
 alias fgrep='grep -F --color=auto'
@@ -157,4 +168,4 @@ done
 #[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 
-command -v starship &> /dev/null && eval "$(starship init zsh)"
+check_bin starship && eval "$(starship init zsh)"
