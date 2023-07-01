@@ -60,7 +60,13 @@ if cmp then
         mapping = cmp.mapping.preset.insert({
             ['<C-d>'] = cmp.mapping.scroll_docs(-4),
             ['<C-f>'] = cmp.mapping.scroll_docs(4),
-            ['<S-Tab>'] = cmp.mapping.complete(),
+            ['<S-Tab>'] = cmp.mapping(function(fallback)
+                if luasnip.jumpable(-1) then
+                    luasnip.jump(-1);
+                else
+                    fallback()
+                end
+            end),
             ['<Tab>'] = cmp.mapping(function(fallback)
                 if cmp.visible() then
                     if false then
@@ -72,7 +78,7 @@ if cmp then
                             select = true,
                         } ()
                     end
-                elseif luasnip.expand_or_jumpable() then
+                elseif luasnip.expand_or_locally_jumpable() then
                     luasnip.expand_or_jump()
                 else
                     fallback()
@@ -88,8 +94,6 @@ if cmp then
             ['<Up>'] = cmp.mapping(function(fallback)
                 if cmp.visible() then
                     cmp.select_prev_item()
-                elseif luasnip.jumpable(-1) then
-                    luasnip.jump(-1)
                 else
                     fallback()
                 end

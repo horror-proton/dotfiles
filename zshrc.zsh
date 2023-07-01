@@ -97,6 +97,7 @@ key[PageUp]="${terminfo[kpp]}"
 key[PageDown]="${terminfo[knp]}"
 key[Ctrl-Left]="${terminfo[kLFT5]}"
 key[Ctrl-Right]="${terminfo[kRIT5]}"
+key[Ctrl-Backspace]="${terminfo[cub1]}"
 
 [[ -n "${key[Home]}"            ]] && bindkey -- "${key[Home]}"       beginning-of-line
 [[ -n "${key[End]}"             ]] && bindkey -- "${key[End]}"        end-of-line
@@ -110,7 +111,8 @@ key[Ctrl-Right]="${terminfo[kRIT5]}"
 [[ -n "${key[PageUp]}"          ]] && bindkey -- "${key[PageUp]}"     beginning-of-buffer-or-history
 [[ -n "${key[PageDown]}"        ]] && bindkey -- "${key[PageDown]}"   end-of-buffer-or-history
 [[ -n "${key[Ctrl-Left]}"       ]] && bindkey -- "${key[Ctrl-Left]}"  backward-word
-[[ -n "${key[Ctrl-Right]}"      ]] && bindkey -- "${key[Ctrl-Right]}" forward-word
+[[ -n "${key[Ctrl-Right]}"      ]] && bindkey -- "${key[Ctrl-Right]}"           forward-word
+[[ -n "${key[Ctrl-Backspace]}"  ]] && bindkey -- "${key[Ctrl-Backspace]}"       backward-kill-word
 
 bindkey '^Q'    push-line-or-edit # ^Q might not work in konsole, do disable flow control in konsole first
 
