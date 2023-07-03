@@ -1,6 +1,8 @@
+local utility = require('utility')
+
 local opt = vim.opt
 local cmd = vim.cmd
-
+local uv = utility.uv
 
 opt.scrolloff = 5
 opt.sidescrolloff = 3
@@ -36,22 +38,29 @@ opt.mouse = 'a'
 
 vim.keymap.set({ '', 'i' }, '<C-s>', function() print(cmd('update')) end)
 
--- store lsplog in tmpfs
-if vim.loop.os_uname().sysname == 'Linux' then
-    local tmplogpath = vim.fs.normalize('/tmp/nvim/lsp.log')
+local function _move_lsplog()
+    if uv.os_uname().sysname ~= 'Linux' then
+        return true
+    end
+    local tmplogpath = vim.fs.normalize(vim.fn.expand('/tmp/nvim/$USER/lsp.log'))
     vim.fn.mkdir(vim.fs.dirname(tmplogpath), 'p')
     local logpath = vim.lsp.get_log_path()
     vim.fn.mkdir(vim.fs.dirname(logpath), 'p')
-    if not vim.loop.fs_stat(logpath) then
-        local lf, err = io.open(tmplogpath, 'a+')
-        assert(lf):write(string.format("Creating %s", tmplogpath))
+    if not uv.fs_stat(logpath) then
+        local lf = assert(io.open(tmplogpath, 'a+'))
+        lf:write(string.format("Creating %s", tmplogpath))
+    elseif not uv.fs_readlink(logpath) then
+        assert(uv.fs_copyfile(logpath, tmplogpath))
     else
-        if not vim.loop.fs_readlink(logpath) then
-            assert(vim.loop.fs_copyfile(logpath, tmplogpath))
-        end
+        assert(io.open(tmplogpath, 'a+')):close() -- is it writable?
     end
     os.remove(logpath)
-    assert(vim.loop.fs_symlink(tmplogpath, logpath))
+    assert(uv.fs_symlink(tmplogpath, logpath))
+end
+
+do
+    local _, err = pcall(_move_lsplog)
+    if err then vim.fn.input(err) end
 end
 
 require('lazy_nvim')
