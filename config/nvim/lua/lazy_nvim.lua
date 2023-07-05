@@ -1,10 +1,12 @@
+local uv = require('utility').uv
+
 local function bootstrap_lazy()
     local success, lazy = pcall(require, 'lazy')
     if success then return lazy end
 
     local lazy_path = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 
-    if vim.loop.fs_stat(lazy_path) then
+    if uv.fs_stat(lazy_path) then
         vim.opt.rtp:prepend(lazy_path)
         success, lazy = pcall(require, 'lazy')
         if success then return lazy end
