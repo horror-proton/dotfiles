@@ -1,0 +1,33 @@
+[core]
+    pager = delta
+
+[interactive]
+    diffFilter = delta --color-only --features=interactive
+
+[delta]
+    features = decorations
+    line-numbers = true
+    line-numbers-left-format = "{nm:>4}⋮"
+    line-numbers-right-format = "{np:>4}│"
+    #side-by-side = true
+
+[delta "interactive"]
+    keep-plus-minus-markers = false
+
+[delta "decorations"]
+    commit-decoration-style = blue ol
+    commit-style = raw
+    file-style = omit
+    hunk-header-decoration-style = blue box
+    hunk-header-file-style = red
+    hunk-header-line-number-style = "#067a00"
+    hunk-header-style = file line-number syntax
+
+[alias]
+	lg1 = log --graph --abbrev-commit --decorate \
+		--format='format:%>|(16)%C(bold blue)%h%C(reset)%C(auto)%d%C(reset) %C(bold white)%s%C(reset) %C(blue)(%ar)%C(reset) %C(dim white)- %an%C(reset)'
+	lg2 = log --graph --abbrev-commit --decorate \
+		--format='format:%>|(16)%C(bold blue)%h%Creset%>|(18)%x20◆%>|(50)%C(blue)%ad%Creset %C(cyan)(%ar)%Creset%C(auto)%d%C(reset)%n%>|(16)%x20 └ %<(60,trunc)%C(bold white)%s%Creset%C(dim white)- %an%Creset'
+ 
+    # https://stackoverflow.com/questions/2363197/can-i-get-a-list-of-files-marked-assume-unchanged/37083903#37083903
+
