@@ -32,11 +32,17 @@ opt.signcolumn = 'yes'
 cmd('syntax enable')
 opt.conceallevel = 2
 opt.spelllang = { 'en_us', 'cjk', }
+vim.g.load_doxygen_syntax = 1
 
 opt.mouse = 'a'
 
 
 vim.keymap.set({ '', 'i' }, '<C-s>', function() print(cmd('update')) end)
+
+for type, icon in pairs({ Error = "►", Warn = "║", Hint = "", Info = "", }) do
+    local hl = "DiagnosticSign" .. type
+    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+end
 
 local function _move_lsplog()
     if uv.os_uname().sysname ~= 'Linux' then

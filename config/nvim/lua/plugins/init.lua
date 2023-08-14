@@ -16,7 +16,7 @@ return {
         lazy = false,
         priority = 1000,
         config = function()
-            vim.cmd([[colorscheme tokyonight]])
+            vim.cmd([[colorscheme tokyonight-night]])
         end,
     },
 
@@ -98,7 +98,7 @@ return {
         config = function()
             require("nvim-treesitter.install").prefer_git = true
             require 'nvim-treesitter.configs'.setup {
-                ensure_install = { "lua", "cpp", "rust", "python" },
+                ensure_installed = { "lua", "cpp", "rust", "python" },
                 sync_install = true,
                 auto_install = false,
                 highlight = {
@@ -126,12 +126,30 @@ return {
     },
 
     {
+        'elkowar/yuck.vim'
+    },
+
+    {
         'nvim-lua/lsp-status.nvim',
     },
 
     {
         'lewis6991/gitsigns.nvim',
         config = true,
+    },
+
+    {
+        "dstein64/nvim-scrollview",
+        config = function()
+            require('scrollview').setup({
+                excluded_filetypes = { 'NvimTree' },
+                current_only = true,
+                winblend = 75,
+                base = 'right',
+                signs_on_startup = { 'all' },
+                diagnostics_severities = { vim.diagnostic.severity.ERROR }
+            })
+        end
     },
 
     { 'github/copilot.vim' },

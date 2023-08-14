@@ -186,6 +186,7 @@ require("clangd_extensions").setup {
             "--header-insertion=iwyu",
             "--header-insertion-decorators",
             "--pch-storage=memory",
+            "--cross-file-rename",
         },
         -- options to pass to nvim-lspconfig
         -- i.e. the arguments to require("lspconfig").clangd.setup({})
@@ -294,7 +295,7 @@ lspconfig.pylsp.setup {
 }
 
 -- Enable some language servers with the additional completion capabilities offered by nvim-cmp
-local servers = { 'cmake', 'bashls', 'tsserver' }
+local servers = { 'cmake', 'bashls', 'hls', 'tsserver' }
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup {
         on_attach = attach,
