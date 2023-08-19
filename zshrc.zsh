@@ -56,7 +56,7 @@ path=(
 )
 
 check_bin nvim && export EDITOR="nvim"
-check_bin bat && export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+check_bin bat && export MANPAGER="sh -c 'col -bx | bat -l man -p'" && export GROFF_NO_SGR=1
 
 alias ls='ls --color=tty'
 
