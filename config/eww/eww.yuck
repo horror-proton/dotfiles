@@ -1,0 +1,101 @@
+(defvar eww "/usr/bin/env eww -c $HOME/.config/eww")
+
+(defwidget bar []
+  (centerbox :orientation "h"
+    (workspaces)
+    (music)
+    (sidestuff)))
+
+(defwidget sidestuff []
+  (box :class "sidestuff" :orientation "h" :space-evenly false :halign "end"
+    (metric :label "󰖀"
+            :value volume
+            :onchange "amixer -D pulse sset Master {}%")
+    (circ :label ""
+            :value {EWW_RAM.used_mem_perc}
+            :onchange "")
+    (label :class "cpu" :text "")
+    (box 
+      :class "cpu"
+      :orientation "h"
+      :space-evenly false
+      (for c in {EWW_CPU.cores}
+        (scale
+          :min 0
+          :max 101
+          :active false
+          :orientation "v"
+          :flipped true
+          :value {c.usage}
+          )))
+    time))
+
+(defwidget workspaces []
+  (box :class "workspaces"
+       :orientation "h"
+       :space-evenly true
+       :halign "start"
+       :spacing 10
+    (button :onclick "wmctrl -s 0" 1)
+    (button :onclick "wmctrl -s 1" 2)
+    (button :anclick "wmctrl -s 2" 3)
+    (button :onclick "wmctrl -s 3" 4)
+    (button :onclick "wmctrl -s 4" 5)
+    (button :onclick "wmctrl -s 5" 6)
+    (button :onclick "wmctrl -s 6" 7)
+    (button :onclick "wmctrl -s 7" 8)
+    (button :onclick "wmctrl -s 8" 9)))
+
+(defwidget music []
+  (box :class "music"
+       :orientation "h"
+       :space-evenly false
+       :halign "center"
+    {music != "" ? "🎵${music}" : ""}))
+
+
+(defwidget metric [label value onchange]
+  (box :orientation "h"
+       :class "metric"
+       :space-evenly false
+    (box :class "label" label)
+    (scale :min 0
+           :max 101
+           :active {onchange != ""}
+           :value value
+           :onchange onchange)))
+
+(defwidget circ [label value]
+  (box
+    :orientation "h"
+    :class "circ"
+    :space-evenly false
+    (box :class "label" label)
+    (circular-progress
+      :value value
+      :thickness 3
+      :width 15
+      :height 15
+    )
+  )
+)
+
+(deflisten music :initial ""
+  "playerctl --follow metadata --format '{{ artist }} - {{ title }}' || true")
+
+(defpoll volume :interval "1s"
+  "scripts/getvol")
+
+(defpoll time :interval "10s"
+  "date '+%H:%M %b %d, %Y'")
+
+(defwindow bar
+  :monitor 0
+  :windowtype "dock"
+  :geometry (geometry :x "0%"
+                      :y "5px"
+                      :width "96%"
+                      :height "25px"
+                      :anchor "top center")
+  :reserve (struts :side "top" :distance "10%")
+  (bar))

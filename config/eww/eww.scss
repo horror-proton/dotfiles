@@ -1,0 +1,59 @@
+$metric-bg: #5e5e8e;
+$metric-hl: #b0b0d0;
+
+* {
+  all: unset;
+}
+
+.bar {
+  background-color: #1a1e2a;
+  color: #e0e0c0;
+  border-radius: 8px;
+  font-family: "Sarasa UI SC";
+}
+
+.sidestuff slider {
+  all: unset;
+  color: #ffd5cd;
+}
+
+.metric scale trough highlight {
+  all: unset;
+  background-color: $metric-hl;
+  border-radius: 3px;
+}
+.metric scale trough {
+  all: unset;
+  background-color: $metric-bg;
+  border-radius: 3px;
+  min-height: 6px;
+  min-width: 100px;
+  margin-left: 0.5rem;
+  margin-right: 1.5rem;
+}
+
+.circ label {
+  margin-right: 0.5rem;
+}
+.circ circular-progress {
+  color: $metric-hl;
+}
+
+.cpu scale trough highlight {
+  all: unset;
+  background-color: $metric-hl;
+}
+.cpu scale trough {
+  all: unset;
+  min-width: 6px;
+  background-color: $metric-bg;
+  margin: 0 1px 0 0;
+}
+
+.workspaces {
+  padding: 0px 0px 0px 8px;
+}
+.workspaces button:hover {
+  font-weight: bolder;
+}
+
