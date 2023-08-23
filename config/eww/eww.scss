@@ -50,10 +50,6 @@ $metric-hl: #b0b0d0;
   margin: 0 1px 0 0;
 }
 
-.workspaces {
-  padding: 0px 0px 0px 8px;
-}
-.workspaces button:hover {
+.workspace-entry.current.occupied {
   font-weight: bolder;
 }
-
