@@ -8,13 +8,13 @@
 
 (defwidget sidestuff []
   (box :class "sidestuff" :orientation "h" :space-evenly false :halign "end"
-    (metric :label "󰖀"
+    (metric :label "󰖀 "
             :value volume
             :onchange "amixer -D pulse sset Master {}%")
-    (circ :label ""
+    (circ :label " "
             :value {EWW_RAM.used_mem_perc}
             :onchange "")
-    (label :class "cpu" :text "")
+    (label :class "cpu" :text " ")
     (box 
       :class "cpu"
       :orientation "h"
@@ -30,20 +30,20 @@
           )))
     time))
 
-(deflisten workspaces :initial "[]" "bash ~/.config/eww/scripts/watch-workspaces")
-(deflisten current_workspace :initial "1" "bash ~/.config/eww/scripts/watch-active-workspace")
+(deflisten workspaces :initial "[]" "scripts/watch-workspaces")
+(deflisten current_workspace :initial "1" "scripts/watch-active-workspace")
 (defwidget workspaces []
-  (eventbox :onscroll "bash ~/.config/eww/scripts/change-active-workspace {} ${current_workspace}" :class "workspaces"
-    (box :space-evenly true
+  (eventbox :onscroll "scripts/change-active-workspace {} ${current_workspace}" :class "workspaces"
+    (box :space-evenly false
       (for workspace in workspaces
         (eventbox :onclick "hyprctl dispatch workspace ${workspace.id}"
           (box :class "workspace-entry ${workspace.id == current_workspace ? "current" : ""} ${workspace.windows > 0 ? "occupied" : "empty"}"
             (label :text "${workspace.id}")
-            )
           )
         )
       )
     )
+  )
 )
 
 (defwidget music []
@@ -70,7 +70,7 @@
     :orientation "h"
     :class "circ"
     :space-evenly false
-    (box :class "label" label)
+    (label :text label)
     (circular-progress
       :value value
       :thickness 3
