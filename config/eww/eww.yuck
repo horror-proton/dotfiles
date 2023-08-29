@@ -28,6 +28,12 @@
           :flipped true
           :value {c.usage}
           )))
+    (box
+      :class "net"
+      :orientation "h"
+      :space-evenly false
+        (net :name "wlan0" :up {EWW_NET.wlan0.NET_UP} :down {EWW_NET.wlan0.NET_DOWN})
+    )
     time))
 
 (deflisten workspaces :initial "[]" "scripts/watch-workspaces")
@@ -36,7 +42,7 @@
   (eventbox :onscroll "scripts/change-active-workspace {} ${current_workspace}" :class "workspaces"
     (box :space-evenly false
       (for workspace in workspaces
-        (eventbox :onclick "hyprctl dispatch workspace ${workspace.id}"
+        (button :onclick "hyprctl dispatch workspace ${workspace.id}"
           (box :class "workspace-entry ${workspace.id == current_workspace ? "current" : ""} ${workspace.windows > 0 ? "occupied" : "empty"}"
             (label :text "${workspace.id}")
           )
@@ -76,6 +82,22 @@
       :thickness 3
       :width 15
       :height 15
+    )
+  )
+)
+
+(defwidget net [name up down]
+  (box
+    :orientation "h"
+    :class "net"
+    :space-evenly false
+    (label :text name)
+    (box
+      :orientation "v"
+      :class "net"
+      :space-evenly false
+      (label :text up)
+      (label :text down)
     )
   )
 )

@@ -1,12 +1,13 @@
 $metric-bg: #5e5e8e;
 $metric-hl: #b0b0d0;
+$bg: #1a1e2a;
 
 * {
   all: unset;
 }
 
 .bar {
-  background-color: #1a1e2a;
+  background-color: $bg;
   color: #e0e0c0;
   border-radius: 8px;
   font-family: "Sarasa UI SC";
@@ -51,6 +52,9 @@ $metric-hl: #b0b0d0;
   background-color: $metric-bg;
   margin: 0 1px 0 0;
 }
+.net {
+    font-size: 0.7rem;
+}
 
 .workspaces box {
   padding: 0 .5rem 0 .5rem;
@@ -63,4 +67,7 @@ $metric-hl: #b0b0d0;
 }
 .workspace-entry.empty {
   opacity: 0.2;
+}
+.workspaces button:hover {
+  background-color: shade($bg, 1.8);
 }
