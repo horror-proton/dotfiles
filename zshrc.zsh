@@ -60,7 +60,7 @@ check_bin bat && export MANPAGER="sh -c 'col -bx | bat -l man -p'" && export GRO
 
 alias ls='ls --color=tty'
 
-check_bin exa && alias l='exa -lah --icons --git --color-scale' || alias l='ls -lAh'
+check_bin eza && alias l='eza -lah --icons --git --color-scale' || alias l='ls -lAh'
 alias ll='ls -lh'
 alias la='ls -lAh'
 
@@ -128,7 +128,7 @@ if [[ ${$(cat /proc/version)[3]} =~ -Microsoft$ ]]; then
     # https://github.com/microsoft/WSL/issues/2138
     # alias rsync='{sleep 1 && while (killall -CHLD ssh && killall -CHLD rsync) {sleep 0.1;} }& ; rsync '
     function rsync() {
-        {sleep 1 && while (killall -CHLD ssh && killall -CHLD rsync) {sleep 0.1;} }&;
+        { sleep 1 && while (killall -CHLD ssh && killall -CHLD rsync); do sleep 0.1; done }&
         command rsync $*
         fg
     }
@@ -161,13 +161,32 @@ compdef proxychains=command
 export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
 for plg in {/usr,~/.local}/share/zsh/plugins/*/*.plugin.zsh(N); do
-    source $plg
+    source "$plg"
 done
 
-#include {/usr,~/.local}/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-#[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+default_prompt() {
+    [[ "$PROMPT" != '%m%# ' ]]
+}
+
+default_prompt || {
+    check_bin starship && eval "$(starship init zsh)"
+}
+
+default_prompt || {
+    include {/usr,~/.local}/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
+    # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+    [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+}
+
+default_prompt || {
+    autoload -U promptinit && promptinit
+    prompt fade green
+}
+
+unfunction default_prompt
 
 
-check_bin starship && eval "$(starship init zsh)"
+unfunction include include_arg check_bin
+
+export LANG=${LANG:-C.UTF-8}
