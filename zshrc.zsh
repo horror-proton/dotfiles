@@ -181,7 +181,7 @@ default_prompt || {
 
 default_prompt || {
     autoload -U promptinit && promptinit
-    prompt fade green
+    prompt fade blue
 }
 
 unfunction default_prompt

@@ -171,6 +171,10 @@ return {
     {
         'noib3/nvim-cokeline',
         config = function() require('plugins.nvim-cokeline') end,
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "kyazdani42/nvim-web-devicons",
+        },
     },
 
     {
