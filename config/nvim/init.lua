@@ -3,9 +3,10 @@ local utility = require('utility')
 local opt = vim.opt
 local cmd = vim.cmd
 local uv = utility.uv
+local kmap = utility.kmap
 
 opt.scrolloff = 5
-opt.sidescrolloff = 3
+opt.sidescrolloff = 8
 opt.relativenumber = true
 opt.number = true
 opt.wrap = false
@@ -25,7 +26,7 @@ opt.listchars = {
     precedes = '⟨',
     space = '•',
 }
-
+opt.termguicolors = true
 opt.signcolumn = 'yes'
 
 
@@ -37,7 +38,15 @@ vim.g.load_doxygen_syntax = 1
 opt.mouse = 'a'
 
 
-vim.keymap.set({ '', 'i' }, '<C-s>', function() print(cmd('update')) end)
+kmap({ '', 'i' }, '<C-s>', function() print(cmd('update')) end)
+
+kmap("n", { "<M-S-j>", "<M-S-Down>" }, "<cmd>m .+1<cr>==", { desc = "Move down" })
+kmap("n", { "<M-S-k>", "<M-S-Up>" }, "<cmd>m .-2<cr>==", { desc = "Move up" })
+kmap("i", { "<M-S-j>", "<M-S-Down>" }, "<esc><cmd>m .+1<cr>==gi", { desc = "Move down" })
+kmap("i", { "<M-S-k>", "<M-S-Up>" }, "<esc><cmd>m .-2<cr>==gi", { desc = "Move up" })
+kmap("v", { "<M-S-j>", "<M-S-Down>" }, ":m '>+1<cr>gv=gv", { desc = "Move down" })
+kmap("v", { "<M-S-k>", "<M-S-Up>" }, ":m '<-2<cr>gv=gv", { desc = "Move up" })
+
 
 for type, icon in pairs({ Error = "►", Warn = "║", Hint = "", Info = "", }) do
     local hl = "DiagnosticSign" .. type
