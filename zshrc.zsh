@@ -114,7 +114,10 @@ key[Ctrl-Backspace]="${terminfo[cub1]}"
 [[ -n "${key[Ctrl-Right]}"      ]] && bindkey -- "${key[Ctrl-Right]}"           forward-word
 [[ -n "${key[Ctrl-Backspace]}"  ]] && bindkey -- "${key[Ctrl-Backspace]}"       backward-kill-word
 
-bindkey '^Q'    push-line-or-edit # ^Q might not work in konsole, do disable flow control in konsole first
+bindkey '^Q'    push-line-or-edit
+# ^Q might not work in konsole, do disable flow control in konsole first
+# other cases stty start '^-' stop '^-' or unsetopt flow_control might work
+bindkey '^[q'   push-line-or-edit
 
 
 if [[ ${$(cat /proc/version)[3]} =~ -Microsoft$ ]]; then
