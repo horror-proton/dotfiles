@@ -7,18 +7,26 @@
     (sidestuff)))
 
 (defwidget sidestuff []
-  (box :class "sidestuff" :orientation "h" :space-evenly false :halign "end"
+
+  (box :class "sidestuff" :orientation "h" :space-evenly false :halign "end" :spacing 20
+    (box
+      :orientation "h"
+      :space-evenly false
+      :spacing 10
+      (net :name "wlan0" :up {EWW_NET.wlan0.NET_UP} :down {EWW_NET.wlan0.NET_DOWN})
+      (net :name "eno1" :up {EWW_NET.eno1.NET_UP} :down {EWW_NET.eno1.NET_DOWN})
+    )
     (metric :label "󰖀 "
             :value volume
             :onchange "amixer -D pulse sset Master {}%")
     (circ :label " "
             :value {EWW_RAM.used_mem_perc}
             :onchange "")
-    (label :class "cpu" :text " ")
     (box 
       :class "cpu"
       :orientation "h"
       :space-evenly false
+      (label :class "cpu" :text "")
       (for c in {EWW_CPU.cores}
         (scale
           :min 0
@@ -28,23 +36,19 @@
           :flipped true
           :value {c.usage}
           )))
-    (box
-      :class "net"
-      :orientation "h"
-      :space-evenly false
-        (net :name "wlan0" :up {EWW_NET.wlan0.NET_UP} :down {EWW_NET.wlan0.NET_DOWN})
-    )
     time))
 
-(deflisten workspaces :initial "[]" "scripts/watch-workspaces")
+(deflisten workspaces :initial '[{"id":1,"windows":0}]' "scripts/watch-workspaces")
 (deflisten current_workspace :initial "1" "scripts/watch-active-workspace")
 (defwidget workspaces []
-  (eventbox :onscroll "scripts/change-active-workspace {} ${current_workspace}" :class "workspaces"
+  (eventbox
+    :onscroll "echo {} | sed -e 's/up/-1/g' -e 's/down/+1/g' | xargs hyprctl dispatch workspace > /dev/null 2>&1"
+    :class "workspaces"
     (box :space-evenly false
       (for workspace in workspaces
         (button :onclick "hyprctl dispatch workspace ${workspace.id}"
           (box :class "workspace-entry ${workspace.id == current_workspace ? "current" : ""} ${workspace.windows > 0 ? "occupied" : "empty"}"
-            (label :text "${workspace.id}")
+            (label :text "${workspace.windows > 0  ? '●' : '○'}")
           )
         )
       )
@@ -80,6 +84,7 @@
     (circular-progress
       :value value
       :thickness 3
+      :start-at 75
       :width 15
       :height 15
     )
@@ -89,15 +94,21 @@
 (defwidget net [name up down]
   (box
     :orientation "h"
-    :class "net"
+    :class "net-label"
     :space-evenly false
     (label :text name)
     (box
       :orientation "v"
-      :class "net"
+      :class "net-values"
       :space-evenly false
-      (label :text up)
-      (label :text down)
+      (label
+        :xalign 1
+        :text {up/1000000>=1 ? round(up/1000000,1)+'M' : down/1000>=1 ? round(up/1000,1)+'K' : up}
+      )
+      (label
+        :xalign 1
+        :text {down/1000000>=1 ? round(down/1000000,1)+'M' : down/1000>=1 ? round(down/1000,1)+'K' : down}
+      )
     )
   )
 )
@@ -105,7 +116,7 @@
 (deflisten music :initial ""
   "playerctl --follow metadata --format '{{ artist }} - {{ title }}' || true")
 
-(defpoll volume :interval "1s"
+(defpoll volume :interval "1s" :initial "0"
   "scripts/getvol")
 
 (defpoll time :interval "10s"
