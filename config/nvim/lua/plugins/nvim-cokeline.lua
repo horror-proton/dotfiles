@@ -24,10 +24,12 @@ require('cokeline').setup {
         bg = tab_bg,
     },
     sidebar = {
-        filetype = 'NvimTree',
+        filetype = { 'NvimTree', 'neo-tree' },
         components = {
             {
-                text = ' -- NvimTree --',
+                text = function(buf)
+                    return buf.filetype
+                end,
                 bg = get_hex('NvimTreeNormal', 'bg'),
             },
         }
@@ -69,7 +71,7 @@ require('cokeline').setup {
         },
         {
             text = function(buffer)
-                return (buffer.diagnostics.errors ~= 0 and '⮾ ' .. buffer.diagnostics.errors)   -- 
+                return (buffer.diagnostics.errors ~= 0 and '⮾ ' .. buffer.diagnostics.errors) -- 
                     or (buffer.diagnostics.warnings ~= 0 and '⚠ ' .. buffer.diagnostics.warnings) -- 
                     or ' '
             end,

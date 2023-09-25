@@ -79,7 +79,7 @@ return {
     { 'hrsh7th/cmp-omni' },
 
     {
-        'p00f/clangd_extensions.nvim'
+        'p00f/clangd_extensions.nvim',
         -- configured in plugins/nvim-lspconfig.lua
     },
 
@@ -214,17 +214,45 @@ return {
                 signs_on_startup = { 'all' },
                 diagnostics_severities = { vim.diagnostic.severity.ERROR }
             })
-        end
+        end,
     },
 
     { 'github/copilot.vim' },
 
-    { 'kyazdani42/nvim-web-devicons' },
+    { 'nvim-tree/nvim-web-devicons' },
 
     {
-        'kyazdani42/nvim-tree.lua',
+        'nvim-tree/nvim-tree.lua',
         tag = 'nightly',
         config = function() require('plugins.nvim-tree') end,
+        enabled = false,
+    },
+
+    {
+        'nvim-neo-tree/neo-tree.nvim',
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "MunifTanjim/nui.nvim",
+        },
+        config = function()
+            require('neo-tree').setup({
+                source_selector = {
+                    winbar = true,
+                    statusline = false,
+                },
+                filesystem = {
+                    filtered_items = {
+                        visible = true,
+                        hide_dotfiles = false,
+                        hide_gitignored = false,
+                    }
+                }
+            })
+
+            vim.keymap.set("n", "<leader>t", function()
+                vim.cmd([[:Neotree toggle]])
+            end)
+        end
     },
 
     {
@@ -238,8 +266,27 @@ return {
         config = function() require('plugins.nvim-cokeline') end,
         dependencies = {
             "nvim-lua/plenary.nvim",
-            "kyazdani42/nvim-web-devicons",
+            "nvim-tree/nvim-web-devicons",
         },
+    },
+
+    {
+        'nvim-telescope/telescope.nvim',
+        dependencies = { 'nvim-lua/plenary.nvim' },
+        config = function()
+            local builtin = require('telescope.builtin')
+            vim.keymap.set("n", "<A-x>", function()
+                builtin.commands(require("telescope.themes").get_ivy({
+                    winblend = 5,
+                    previewer = false,
+                }))
+            end, { desc = "[/keys] execute keymaps or functions]" })
+
+            vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Find files" })
+            vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = "Live grep" })
+            vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = "Buffers" })
+            vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = "Help tags" })
+        end
     },
 
     {
