@@ -48,7 +48,7 @@ kmap("v", { "<M-S-j>", "<M-S-Down>" }, ":m '>+1<cr>gv=gv", { desc = "Move down" 
 kmap("v", { "<M-S-k>", "<M-S-Up>" }, ":m '<-2<cr>gv=gv", { desc = "Move up" })
 
 
-for type, icon in pairs({ Error = "►", Warn = "║", Hint = "", Info = "", }) do
+for type, icon in pairs({ Error = "►", Warn = "⚠", Hint = "", Info = "", }) do
     local hl = "DiagnosticSign" .. type
     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end

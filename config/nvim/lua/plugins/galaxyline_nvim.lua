@@ -6,7 +6,7 @@ end
 local colors = require('galaxyline.theme').default
 local condition = require('galaxyline.condition')
 
-galaxyline.short_line_list = { 'NvimTree', 'packer', 'lspsagaoutline', 'toggleterm' }
+galaxyline.short_line_list = { 'NvimTree', 'neo-tree', 'packer', 'lspsagaoutline', 'toggleterm' }
 
 galaxyline.section.left[1] = {
     RainbowRed = {

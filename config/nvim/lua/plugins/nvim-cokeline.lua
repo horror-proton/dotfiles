@@ -9,9 +9,19 @@ local click      = function(_, _, buttons, modifiers, buffer)
     if buttons == 'm' and modifiers == '    ' then
         buffer:delete()
     elseif buttons == 'l' then -- require('cokeline.handlers').default_click()
-        if vim.api.nvim_buf_get_option(vim.api.nvim_get_current_buf(), 'buftype') == '' then
+        if vim.api.nvim_buf_get_option(0, 'buftype') == '' then
             vim.api.nvim_set_current_buf(buffer.number)
+            return
         end
+        for _, w in ipairs(vim.api.nvim_list_wins()) do
+            local buf = vim.api.nvim_win_get_buf(w)
+            if vim.api.nvim_buf_get_option(buf, 'buftype') == '' then
+                vim.api.nvim_set_current_win(w)
+                vim.api.nvim_set_current_buf(buffer.number)
+                return
+            end
+        end
+        -- vim.cmd.split({ mods = { vertical = true } })
     end
 end
 
