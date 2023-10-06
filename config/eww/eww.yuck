@@ -8,34 +8,42 @@
 
 (defwidget sidestuff []
 
-  (box :class "sidestuff" :orientation "h" :space-evenly false :halign "end" :spacing 20
+  (box :class "sidestuff" :orientation "h" :space-evenly false :halign "end" :spacing 10
     (box
       :orientation "h"
       :space-evenly false
       :spacing 10
-      (net :name "wlan0" :up {EWW_NET.wlan0.NET_UP} :down {EWW_NET.wlan0.NET_DOWN})
-      (net :name "eno1" :up {EWW_NET.eno1.NET_UP} :down {EWW_NET.eno1.NET_DOWN})
+      (for i in {jq(EWW_NET, "to_entries")}
+        (net :class "neti" :name {i.key} :up {i.value.NET_UP} :down {i.value.NET_DOWN})
+      )
     )
-    (metric :label "󰖀 "
-            :value volume
-            :onchange "amixer -D pulse sset Master {}%")
-    (circ :label " "
-            :value {EWW_RAM.used_mem_perc}
-            :onchange "")
+    (box :class "vol" :space-evenly false
+        (metric :label "󰖀 "
+                    :value volume
+                    :onchange "amixer -D pulse sset Master {}%")
+    )
+    (box :class "mem" :space-evenly false
+      (circ :label " " :value {EWW_RAM.used_mem_perc})
+    )
     (box 
       :class "cpu"
       :orientation "h"
       :space-evenly false
-      (label :class "cpu" :text "")
-      (for c in {EWW_CPU.cores}
-        (scale
-          :min 0
-          :max 101
-          :active false
-          :orientation "v"
-          :flipped true
-          :value {c.usage}
-          )))
+      (label :text "")
+      (box
+        :spacing 1
+        (for c in {EWW_CPU.cores}
+          (scale
+            :min 0
+            :max 101
+            :active false
+            :orientation "v"
+            :flipped true
+            :value {c.usage}
+          )
+        )
+      )
+    )
     time))
 
 (deflisten workspaces :initial '[{"id":1,"windows":0}]' "scripts/watch-workspaces")
@@ -125,6 +133,7 @@
 (defwindow bar
   :monitor 0
   :windowtype "dock"
+  :namespace "eww-bar"
   :geometry (geometry :x "0%"
                       :y "5px"
                       :width "96%"

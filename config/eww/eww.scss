@@ -1,14 +1,14 @@
-$metric-bg: #5e5e8e;
-$metric-hl: #b0b0d0;
-$bg: #1a1e2a;
+$metric-bg: #4e4e6e;
+$metric-hl: #c0c0e0;
+$bg: #2d2d3e;
 
 * {
   all: unset;
 }
 
 .bar {
-  background-color: $bg;
-  color: #e0e0d0;
+  // background-color: $bg;
+  color: #f0f0e0;
   border-radius: 8px;
   font-family: "Sarasa UI SC";
   font-weight: bold;
@@ -41,9 +41,23 @@ $bg: #1a1e2a;
 }
 .circ circular-progress {
   color: $metric-hl;
+  background-color: $metric-bg;
 }
 
+.vol {
+  background-color: $bg;
+  border-radius: 5px;
+  padding: 5px;
+}
 
+.cpu {
+  background-color: $bg;
+  border-radius: 5px;
+  padding: 5px;
+}
+.cpu label {
+  margin-right: 0.5rem;
+}
 .cpu scale trough highlight {
   all: unset;
   background-color: $metric-hl;
@@ -52,10 +66,19 @@ $bg: #1a1e2a;
   all: unset;
   min-width: 6px;
   background-color: $metric-bg;
-  margin: 0 1px 0 0;
+  margin: 0 0px 0 0;
+}
+
+.mem {
+  background-color: $bg;
+  border-radius: 5px;
+  padding: 5px;
 }
 
 .net-label {
+  background-color: $bg;
+  border-radius: 5px;
+  padding: 0px 5px;
   margin-right: 0.2rem;
 }
 .net-values {
