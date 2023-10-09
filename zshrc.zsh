@@ -60,7 +60,7 @@ check_bin bat && export MANPAGER="sh -c 'col -bx | bat -l man -p'" && export GRO
 
 alias ls='ls --color=tty'
 
-check_bin eza && alias l='eza -lah --icons --git --color-scale' || alias l='ls -lAh'
+check_bin eza && alias l='eza -lah --icons --git --color-scale --mounts' || alias l='ls -lAh'
 alias ll='ls -lh'
 alias la='ls -lAh'
 

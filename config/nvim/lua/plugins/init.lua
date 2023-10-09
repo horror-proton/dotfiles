@@ -116,29 +116,23 @@ return {
             dap.configurations.c = dap.configurations.cpp
             dap.configurations.rust = dap.configurations.cpp
 
-            local km = function(mode, lhs, rhs, opts)
-                if (type(lhs) == 'string') then
-                    return vim.keymap.set(mode, lhs, rhs, opts)
-                end
-                for _, v in ipairs(lhs) do
-                    vim.keymap.set(mode, v, rhs, opts)
-                end
-            end
 
-            km('n', '<leader><F10>', function() require('dap').continue() end, { desc = 'Debug Continue' })
-            km('n', { '<F7>', '<leader>di' }, function() require('dap').step_into() end, { desc = 'Step Into' })
-            km('n', { '<F8>', '<leader>do' }, function() require('dap').step_out() end, { desc = 'Step Out' })
-            km('n', { '<F20>', '<leader>dv' }, function() require('dap').step_over() end, { desc = 'Step Over' }) -- Shift + f8
-            km('n', { '<M-(>', '<leader>dc' }, function() require('dap').run_to_cursor() end)                     -- Alt + Shift + 9
-            km('n', { '<F32>', '<leader>b' }, function() require('dap').toggle_breakpoint() end,
+            local kmap = require('utility').kmap;
+
+            kmap('n', '<leader><F10>', function() require('dap').continue() end, { desc = 'Debug Continue' })
+            kmap('n', { '<F7>', '<leader>di' }, function() require('dap').step_into() end, { desc = 'Step Into' })
+            kmap('n', { '<F8>', '<leader>do' }, function() require('dap').step_out() end, { desc = 'Step Out' })
+            kmap('n', { '<F20>', '<leader>dv' }, function() require('dap').step_over() end, { desc = 'Step Over' }) -- Shift + f8
+            kmap('n', { '<M-(>', '<leader>dc' }, function() require('dap').run_to_cursor() end)                     -- Alt + Shift + 9
+            kmap('n', { '<F32>', '<leader>b' }, function() require('dap').toggle_breakpoint() end,
                 { desc = 'Toggle Break' })
-            km({ 'n', 'v' }, '<leader>dh', function() require('dap.ui.widgets').hover() end)
-            km({ 'n', 'v' }, '<leader>dp', function() require('dap.ui.widgets').preview() end)
-            km({ 'n', 'v' }, '<leader>df', function()
+            kmap({ 'n', 'v' }, '<leader>dh', function() require('dap.ui.widgets').hover() end)
+            kmap({ 'n', 'v' }, '<leader>dp', function() require('dap.ui.widgets').preview() end)
+            kmap({ 'n', 'v' }, '<leader>df', function()
                 local widgets = require('dap.ui.widgets')
                 widgets.centered_float(widgets.frames)
             end)
-        end
+        end,
     },
 
     {
