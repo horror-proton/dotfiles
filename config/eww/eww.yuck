@@ -44,6 +44,7 @@
         )
       )
     )
+    (batt)
     time))
 
 (deflisten workspaces :initial '[{"id":1,"windows":0}]' "scripts/watch-workspaces")
@@ -117,6 +118,14 @@
         :xalign 1
         :text {down/1000000>=1 ? round(down/1000000,1)+'M' : down/1000>=1 ? round(down/1000,1)+'K' : down}
       )
+    )
+  )
+)
+
+(defwidget batt []
+  (box
+    (label
+      :text {jq(EWW_BATTERY, 'to_entries|.[0].value| (.capacity|tostring) + "% " + .status')}
     )
   )
 )
