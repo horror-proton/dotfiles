@@ -3,16 +3,16 @@
 (defwidget bar []
   (centerbox :orientation "h"
     (workspaces)
-    (music)
+    (title)
     (sidestuff)))
 
 (defwidget sidestuff []
 
-  (box :class "sidestuff" :orientation "h" :space-evenly false :halign "end" :spacing 10
+  (box :class "sidestuff" :orientation "h" :space-evenly false :halign "end" :spacing 5
     (box
       :orientation "h"
       :space-evenly false
-      :spacing 10
+      :spacing 5
       (for i in {jq(EWW_NET, "to_entries")}
         (net :class "neti" :name {i.key} :up {i.value.NET_UP} :down {i.value.NET_DOWN})
       )
@@ -72,6 +72,15 @@
        :halign "center"
     {music != "" ? "🎵${music}" : ""}))
 
+(deflisten activewindow :initial '{"title":""}' "scripts/watch-active-window")
+(defwidget title []
+  (box
+    :class "title"
+    :halign "start"
+    {activewindow.title}
+  )
+)
+
 
 (defwidget metric [label value onchange]
   (box :orientation "h"
@@ -123,9 +132,9 @@
 )
 
 (defwidget batt []
-  (box
+  (box :visible {objectlength(EWW_BATTERY) == 2}
     (label
-      :text {jq(EWW_BATTERY, 'to_entries|.[0].value| (.capacity|tostring) + "% " + .status')}
+      :text {jq(jq(EWW_BATTERY, 'to_entries')?.[0].value, '(.capacity|tostring) + "% " + .status')}
     )
   )
 )
@@ -145,7 +154,7 @@
   :namespace "eww-bar"
   :geometry (geometry :x "0%"
                       :y "5px"
-                      :width "96%"
+                      :width "98%"
                       :height "25px"
                       :anchor "top center")
   :exclusive true
