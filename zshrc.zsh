@@ -151,7 +151,7 @@ function ranger() {
 
 
 ## https://github.com/zsh-users/zsh-completions.git
-fpath=(~/.local/share/zsh-completions/src $fpath)
+fpath=(~/{.local,.nix-profile}/share/zsh/site-functions $fpath)
 autoload -U compinit && compinit
 autoload -U bashcompinit && bashcompinit
 zstyle ':completion:*' menu select
@@ -167,6 +167,8 @@ for plg in {/usr,~/.local}/share/zsh/plugins/*/*.plugin.zsh(N); do
     source "$plg"
 done
 
+
+setterm -blength 0 2> /dev/null
 
 default_prompt() {
     [[ "$PROMPT" != '%m%# ' ]]

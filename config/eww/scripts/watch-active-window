@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+query() {
+    hyprctl -j activewindow | jq -c 'if . == {} then empty else . end'
+}
+
+query
+
+socat -u UNIX-CONNECT:/tmp/hypr/"$HYPRLAND_INSTANCE_SIGNATURE"/.socket2.sock - |\
+stdbuf -oL awk -F '>>|,' -e '/.*window>>/' |\
+while read -r; do
+    query
+done
