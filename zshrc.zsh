@@ -60,12 +60,13 @@ check_bin bat && export MANPAGER="sh -c 'col -bx | bat -l man -p'" && export GRO
 
 alias ls='ls --color=tty'
 
-check_bin eza && alias l='eza -lah --icons --git --color-scale --mounts' || alias l='ls -lAh'
+check_bin eza && alias l='eza -lah --icons --git --mounts --color-scale=size' || alias l='ls -lAh'
 alias ll='ls -lh'
 alias la='ls -lAh'
 
 alias sudo='sudo '
 alias rm='rm --interactive=always'
+alias less='less -R'
 check_bin ranger && alias ra='ranger'
 
 if [ -z "$TMUX" ]
