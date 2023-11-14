@@ -5,7 +5,7 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# history 
+# history
 export HISTSIZE=100000
 export SAVEHIST=100000
 export HISTFILE="$HOME/.zsh_history"
@@ -56,11 +56,13 @@ path=(
 )
 
 check_bin nvim && export EDITOR="nvim"
-check_bin bat && export MANPAGER="sh -c 'col -bx | bat -l man -p'" && export GROFF_NO_SGR=1
+check_bin bat && export MANPAGER="sh -c 'col -bx | bat -l man -p'" GROFF_NO_SGR=1
 
 alias ls='ls --color=tty'
 
-check_bin eza && alias l='eza -lah --icons --git --mounts --color-scale=size' || alias l='ls -lAh'
+check_bin eza &&
+    alias l='eza -lah --icons --git --mounts --color-scale=size --time-style=iso' ||
+    alias l='ls -lAh'
 alias ll='ls -lh'
 alias la='ls -lAh'
 
@@ -195,4 +197,4 @@ unfunction default_prompt
 
 unfunction include include_arg check_bin
 
-export LANG=${LANG:-C.UTF-8}
+[[ $TERM =~ ^xterm.* ]] && export LANG=${LANG:-C.UTF-8}
