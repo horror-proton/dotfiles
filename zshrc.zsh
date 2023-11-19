@@ -166,9 +166,11 @@ compdef proxychains=command
 
 export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
-for plg in {/usr,~/.local}/share/zsh/plugins/*/*.plugin.zsh(N); do
+setopt CSH_NULL_GLOB # language server does not recognize foo(N)
+for plg in {/usr,~/.local}/share/zsh/plugins/*/*.plugin.zsh; do
     source "$plg"
 done
+unsetopt CSH_NULL_GLOB
 
 
 setterm -blength 0 2> /dev/null
@@ -197,4 +199,4 @@ unfunction default_prompt
 
 unfunction include include_arg check_bin
 
-[[ $TERM =~ ^xterm.* ]] && export LANG=${LANG:-C.UTF-8}
+[[ $TERM =~ ^xterm.* ]] && export LANG=${LANG:-C.UTF-8} || true
