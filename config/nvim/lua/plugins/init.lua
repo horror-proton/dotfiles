@@ -84,6 +84,7 @@ return {
 
     {
         'L3MON4D3/LuaSnip',
+        build = "make install_jsregexp",
         config = function()
             -- require('plugins.luasnip') -- run in plugins/nvim-lspconfig.lua
         end,
