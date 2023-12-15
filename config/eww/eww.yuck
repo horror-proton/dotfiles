@@ -1,4 +1,4 @@
-(defvar eww "/usr/bin/env eww -c $HOME/.config/eww")
+(defvar eww "$HOME/.local/bin/eww -c $HOME/.config/eww")
 
 (defwidget bar []
   (centerbox :orientation "h"
@@ -132,9 +132,18 @@
 )
 
 (defwidget batt []
-  (box :visible {objectlength(EWW_BATTERY) == 2}
-    (label
-      :text {jq(jq(EWW_BATTERY, 'to_entries')?.[0].value, '(.capacity|tostring) + "% " + .status')}
+  (box :visible {objectlength(EWW_BATTERY) == 2} :class 'battery'
+    (for batt in {jq(EWW_BATTERY, 'del(.total_avg)|to_entries|[.[].value]')}
+      (label
+        :style {batt.status == 'Discharging' ? "color: #f33;" : 'color: #bfb;'}
+        :text {(
+        batt.status == 'Charging' ? '󰂄 ' :
+        batt.status == 'Discharging' ? '󰂌 ' :
+        batt.status == 'Not charging' ? '󰂂 ' :
+        batt.status == 'Full' ? '󰁹 ' : '󰂃 ' )
+        + batt.capacity + '%'
+        }
+      )
     )
   )
 )
