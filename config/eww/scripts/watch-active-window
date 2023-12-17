@@ -1,13 +1,36 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python
 
-query() {
-    hyprctl -j activewindow | jq -c 'if . == {} then empty else . end'
-}
+import socket
+import os
+import sys
 
-query
+ins_sig = os.getenv('HYPRLAND_INSTANCE_SIGNATURE')
+if ins_sig is None:
+    exit(1)
 
-socat -u UNIX-CONNECT:/tmp/hypr/"$HYPRLAND_INSTANCE_SIGNATURE"/.socket2.sock - |\
-stdbuf -oL awk -F '>>|,' -e '/.*window>>/' |\
-while read -r; do
-    query
-done
+
+def query(arg: bytes) -> bytes:
+    with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
+        s.connect('/tmp/hypr/' + ins_sig + '/.socket.sock')
+        s.sendall(arg)
+        data: bytes = b''
+        while True:
+            d = s.recv(1024)
+            if len(d) == 0:
+                break
+            data += d
+        s.close()
+        return data
+
+
+if __name__ == '__main__':
+    with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
+        sock.connect('/tmp/hypr/' + ins_sig + '/.socket2.sock')
+        event: bytes = b'activewindow>>'
+        while True:
+            if event.startswith(b'activewindow>>'):
+                sys.stdout.buffer.write(
+                    query(b'-j/activewindow').replace(b'\n', b'') + b'\n')
+                sys.stdout.flush()
+            event = sock.recv(1024)
+        sock.close()
