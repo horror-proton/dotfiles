@@ -154,8 +154,8 @@
 (defpoll volume :interval "1s" :initial "0"
   "scripts/getvol")
 
-(defpoll time :interval "1s"
-  "date '+%m-%d %a %T'")
+(deflisten time
+  "scripts/watch-time")
 
 (defwindow bar
   :monitor 0
