@@ -69,6 +69,10 @@ alias la='ls -lAh'
 alias sudo='sudo '
 alias rm='rm --interactive=always'
 alias less='less -R'
+
+export LESSHISTFILE=/dev/null
+export LESS='-R'
+
 check_bin ranger && alias ra='ranger'
 
 if [ -z "$TMUX" ]
