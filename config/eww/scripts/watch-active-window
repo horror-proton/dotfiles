@@ -16,3 +16,5 @@ if __name__ == '__main__':
                     b'\n')
                 sys.stdout.flush()
             event = sock.recv(1024)
+            if len(event) == 0:
+                exit(1)
