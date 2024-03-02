@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+stdbuf -oL amixer sevents |
+while read -r line; do
+    if [[ "$line" == Poll* ]]; then
+        amixer sget 'Master' | sed -nE '7s/.*([0-9]+)%.*/\1/p'
+    fi
+done

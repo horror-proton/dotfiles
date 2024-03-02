@@ -135,7 +135,7 @@
   (box :visible {objectlength(EWW_BATTERY) == 2} :class 'battery'
     (for batt in {jq(EWW_BATTERY, 'del(.total_avg)|to_entries|[.[].value]')}
       (label
-        :style {batt.status == 'Discharging' ? "color: #f33;" : 'color: #bfb;'}
+        :style {batt.status == 'Discharging' ? "color: #fbb;" : 'color: #bfb;'}
         :text {(
         batt.status == 'Charging' ? '󰂄 ' :
         batt.status == 'Discharging' ? '󰂌 ' :
@@ -151,8 +151,8 @@
 (deflisten music :initial ""
   "playerctl --follow metadata --format '{{ artist }} - {{ title }}' || true")
 
-(defpoll volume :interval "1s" :initial "0"
-  "scripts/getvol")
+(deflisten volume :initial "0"
+  "scripts/watch-volume")
 
 (deflisten time
   "scripts/watch-time")
