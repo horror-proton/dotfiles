@@ -3,6 +3,15 @@
 import os
 import sys
 
+
+def callback(event):
+    for e in event.splitlines():
+        if event.startswith(b'activewindow>>'):
+            sys.stdout.buffer.write(
+                hyprland.query(b'-j/activewindow').replace(b'\n', b'') + b'\n')
+            sys.stdout.flush()
+
+
 if __name__ == '__main__':
     sys.path.append(os.path.dirname(os.path.abspath(__file__)))
     import hyprland
@@ -10,11 +19,7 @@ if __name__ == '__main__':
     with hyprland.socket2() as sock:
         event: bytes = b'activewindow>>'
         while True:
-            if event.startswith(b'activewindow>>'):
-                sys.stdout.buffer.write(
-                    hyprland.query(b'-j/activewindow').replace(b'\n', b'') +
-                    b'\n')
-                sys.stdout.flush()
+            callback(event)
             event = sock.recv(1024)
             if len(event) == 0:
                 exit(1)
