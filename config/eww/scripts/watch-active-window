@@ -6,7 +6,7 @@ import sys
 
 def callback(event):
     for e in event.splitlines():
-        if event.startswith(b'activewindow>>'):
+        if e.startswith(b'activewindowv2>>'):
             sys.stdout.buffer.write(
                 hyprland.query(b'-j/activewindow').replace(b'\n', b'') + b'\n')
             sys.stdout.flush()

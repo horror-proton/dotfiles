@@ -15,7 +15,8 @@ $bg: rgb(18% 18% 24% / 40%);
 }
 
 .title {
-  margin: 0 50px;
+  background-color: $bg;
+  padding: 0 0.5rem;
 }
 
 .sidestuff slider {
