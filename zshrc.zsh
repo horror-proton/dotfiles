@@ -184,19 +184,27 @@ default_prompt() {
 }
 
 default_prompt || {
-    check_bin starship && eval "$(starship init zsh)"
-}
-
-default_prompt || {
     include {/usr,~/.local}/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
     # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
     [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-}
-
-default_prompt || {
+} || {
     autoload -U promptinit && promptinit
     prompt fade blue
 }
+
+precmd() {
+    print -Pn "\e]133;A\e\\"
+}
+function osc7-pwd() {
+    emulate -L zsh
+    setopt extended_glob
+    local LC_ALL=C
+    printf '\e]7;file://%s%s\e\' $HOST ${PWD//(#m)([^@-Za-z&-;_~])/%${(l:2::0:)$(([##16]#MATCH))}}
+}
+function chpwd-osc7-pwd() {
+    (( ZSH_SUBSHELL )) || osc7-pwd
+}
+add-zsh-hook -Uz chpwd chpwd-osc7-pwd
 
 unfunction default_prompt
 
