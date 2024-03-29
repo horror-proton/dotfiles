@@ -27,14 +27,14 @@ setopt INTERACTIVE_COMMENTS
 
 setopt TRANSIENT_RPROMPT
 
-# shellcheck disabl=SC1090
 include() {
     for p in "$@"; do
         if [[ -f "$p" ]]; then
             source "$p"
-            break
+            return $?
         fi
     done
+    return 1
 }
 
 # shellcheck disabl=SC1090
@@ -51,7 +51,7 @@ typeset -U path # unique
 path=(
     ~/.local/bin
     ~/.cargo/bin
-    ~/.nix-profile/bin
+    # ~/.nix-profile/bin
     $path
 )
 
@@ -69,6 +69,7 @@ alias la='ls -lAh'
 alias sudo='sudo '
 alias rm='rm --interactive=always'
 alias less='less -R'
+alias j='journalctl --follow'
 
 export LESSHISTFILE=/dev/null
 export LESS='-R'
@@ -179,18 +180,13 @@ unsetopt CSH_NULL_GLOB
 
 setterm -blength 0 2> /dev/null
 
-default_prompt() {
-    [[ "$PROMPT" != '%m%# ' ]]
-}
-
-default_prompt || {
-    include {/usr,~/.local}/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
-    # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+if include {/usr,~/.local}/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme; then
     [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-} || {
+else
+    export LANG=${LANG:-C.UTF-8}
     autoload -U promptinit && promptinit
-    prompt fade blue
-}
+    prompt fade red
+fi
 
 precmd() {
     print -Pn "\e]133;A\e\\"
@@ -206,9 +202,5 @@ function chpwd-osc7-pwd() {
 }
 add-zsh-hook -Uz chpwd chpwd-osc7-pwd
 
-unfunction default_prompt
-
-
 unfunction include include_arg check_bin
 
-[[ $TERM =~ ^xterm.* ]] && export LANG=${LANG:-C.UTF-8} || true
