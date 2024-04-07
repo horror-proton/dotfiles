@@ -188,7 +188,6 @@ lspconfig['clangd'].setup {
         "--header-insertion=iwyu",
         "--header-insertion-decorators",
         "--pch-storage=memory",
-        "--cross-file-rename",
     },
 }
 require("clangd_extensions").setup {
@@ -291,6 +290,10 @@ lspconfig.pylsp.setup {
         },
     },
     cmd = { "pylsp", "-v" },
+}
+
+lspconfig.qmlls.setup {
+    cmd = { 'qmlls6', '--log-file', '/dev/stderr' }
 }
 
 -- Enable some language servers with the additional completion capabilities offered by nvim-cmp
