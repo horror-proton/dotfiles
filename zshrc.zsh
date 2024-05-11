@@ -157,6 +157,22 @@ function ranger() {
     fi
 }
 
+function cmake() {
+    # if (($@[(Ie)-B] || $@[(Ie)-S])); then
+    local flag=0
+    for item in "${@[@]}"; do
+        if [[ "${item}" == "-B" || "${item}" == "-S" ]]; then
+            flag=1
+        fi
+    done
+    if ((flag)); then
+        printf "zshrc: executing with CMAKE_EXPORT_COMPILE_COMMANDS ON\n"
+        command cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON "$@"
+    else
+        command cmake "$@"
+    fi
+}
+
 
 ## https://github.com/zsh-users/zsh-completions.git
 fpath=(~/{.local,.nix-profile}/share/zsh/site-functions $fpath)
