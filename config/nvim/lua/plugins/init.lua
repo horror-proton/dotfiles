@@ -151,7 +151,7 @@ return {
 
     {
         "rcarriga/nvim-dap-ui",
-        dependencies = { "mfussenegger/nvim-dap" },
+        dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
         config = function()
             require('dapui').setup()
 
@@ -211,6 +211,7 @@ return {
         config = function()
             require('gitsigns').setup({
                 numhl = true,
+                linehl = true,
                 on_attach = function(bufnr)
                     local gitsigns = require('gitsigns')
 
@@ -304,7 +305,7 @@ return {
     },
 
     {
-        'noib3/nvim-cokeline',
+        'willothy/nvim-cokeline',
         config = function() require('plugins.nvim-cokeline') end,
         dependencies = {
             "nvim-lua/plenary.nvim",
