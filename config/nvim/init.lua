@@ -79,3 +79,5 @@ do
 end
 
 require('lazy_nvim')
+require('fcitx')
+
