@@ -187,11 +187,11 @@ compdef proxychains=command
 
 export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
-setopt CSH_NULL_GLOB # language server does not recognize foo(N)
+setopt NULL_GLOB # language server does not recognize foo(N)
 for plg in {/usr,~/.local}/share/zsh/plugins/*/*.plugin.zsh; do
     source "$plg"
 done
-unsetopt CSH_NULL_GLOB
+unsetopt NULL_GLOB
 
 
 setterm -blength 0 2> /dev/null
@@ -206,7 +206,13 @@ fi
 
 precmd() {
     print -Pn "\e]133;A\e\\"
+    print -Pn "\e];zsh\e\\"
 }
+
+preexec() {
+    print -Pn "\e];$1\e\\"
+}
+
 function osc7-pwd() {
     emulate -L zsh
     setopt extended_glob
