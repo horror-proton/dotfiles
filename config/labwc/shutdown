@@ -1,0 +1,3 @@
+fcitx5-remote -e || true
+killall sfwbar || true
+pgrep xdg-desktop-por | xargs kill

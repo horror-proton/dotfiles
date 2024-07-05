@@ -1,0 +1,5 @@
+/usr/lib/xdg-desktop-portal-wlr &
+/usr/lib/polkit-kde-authentication-agent-1 &
+sfwbar &
+dunst &
+fcitx5 &
