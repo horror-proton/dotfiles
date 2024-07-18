@@ -29,8 +29,6 @@ opt.listchars = {
 opt.termguicolors = true
 opt.signcolumn = 'yes'
 
-
-cmd('syntax enable')
 opt.conceallevel = 2
 opt.spelllang = { 'en_us', 'cjk', }
 vim.g.load_doxygen_syntax = 1
