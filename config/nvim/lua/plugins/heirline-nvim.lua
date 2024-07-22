@@ -52,12 +52,35 @@ local ViMode = utils.surround({ "", "" }, "bright_bg",
             fg = 'bright_fg',
         },
     }
-
 )
+
+---@type StatusLine
+local DevIcon = {
+    init = function(self)
+        local ftype = vim.bo.filetype
+        self.devicon, self.devicon_color =
+            require('nvim-web-devicons').get_icon_color_by_filetype(ftype, { default = true })
+    end,
+    provider = function(self)
+        return self.devicon
+    end,
+    hl = function(self)
+        return { fg = self.devicon_color, }
+    end,
+}
 
 local FileName = {
     provider = "%f :%l :%c %m%r%h%y%q",
     hl = 'Title',
+}
+
+---@type StatusLine
+local FileEncoding = {
+    provider = function()
+        local enc = (vim.bo.fenc ~= '' and vim.bo.fenc) or vim.o.enc -- :h 'enc'
+        -- return enc ~= 'utf-8' and enc:upper()
+        return enc:upper()
+    end
 }
 
 local LSPActive = {
@@ -84,9 +107,12 @@ heirline.setup({
         Space,
         ViMode,
         Space,
+        DevIcon,
+        Space,
         FileName,
         Align,
         LSPActive,
         Align,
+        FileEncoding,
     },
 })
