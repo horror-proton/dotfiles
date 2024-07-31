@@ -131,7 +131,9 @@ if cmp then
 end
 
 
-local attach = function(_) end
+local attach = function(_)
+    vim.lsp.inlay_hint.enable()
+end
 
 -- Add additional capabilities supported by nvim-cmp
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -172,10 +174,7 @@ lspconfig.lua_ls.setup {
 }
 
 lspconfig['clangd'].setup {
-    on_attach = function()
-        require("clangd_extensions.inlay_hints").setup_autocmd()
-        require("clangd_extensions.inlay_hints").set_inlay_hints()
-    end,
+    on_attach = attach,
     capabilities = { offsetEncoding = 'utf-16' },
     cmd = {
         "clangd",
@@ -193,7 +192,7 @@ lspconfig['clangd'].setup {
 require("clangd_extensions").setup {
     -- defaults:
     -- Automatically set inlay hints (type hints)
-    autoSetHints = true,
+    autoSetHints = false,
     -- These apply to the default ClangdSetInlayHints command
     inlay_hints = {
         -- Only show inlay hints for the current line
@@ -297,7 +296,7 @@ lspconfig.qmlls.setup {
 }
 
 -- Enable some language servers with the additional completion capabilities offered by nvim-cmp
-local servers = { 'cmake', 'bashls', 'hls', 'tsserver' }
+local servers = { 'cmake', 'bashls', 'hls', 'tsserver', 'jsonls' }
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup {
         on_attach = attach,

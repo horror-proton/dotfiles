@@ -299,9 +299,10 @@ return {
     },
 
     {
-        'glepnir/galaxyline.nvim',
-        branch = 'main',
-        config = function() require('plugins.galaxyline_nvim') end,
+        'rebelot/heirline.nvim',
+        config = function()
+            require('plugins.heirline-nvim')
+        end
     },
 
     {

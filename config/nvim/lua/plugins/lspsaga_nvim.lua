@@ -12,3 +12,5 @@ vim.keymap.set("n", "<leader>gd", "<cmd>Lspsaga peek_definition<CR>", { silent =
 vim.keymap.set("n", "<leader>cd", "<cmd>Lspsaga show_line_diagnostics<CR>", { silent = true })
 vim.keymap.set("n", "<leader>cd", "<cmd>Lspsaga show_cursor_diagnostics<CR>", { silent = true })
 vim.keymap.set("n", "K", "<cmd>Lspsaga hover_doc<CR>", { silent = true })
+
+vim.keymap.set("n", "<M-d>", "<cmd>Lspsaga term_toggle<CR>", { silent = true })

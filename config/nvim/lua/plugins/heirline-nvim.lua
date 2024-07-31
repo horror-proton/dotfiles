@@ -14,10 +14,9 @@ local function setup_colors()
         orange = utils.get_highlight("Constant").fg,
         purple = utils.get_highlight("Statement").fg,
         cyan = utils.get_highlight("Special").fg,
+        dir_fg = utils.get_highlight("Directory").fg,
     }
 end
-
-local colors = setup_colors()
 
 vim.api.nvim_create_augroup("Heirline", { clear = true })
 vim.api.nvim_create_autocmd("ColorScheme", {
@@ -27,6 +26,11 @@ vim.api.nvim_create_autocmd("ColorScheme", {
     group = "Heirline",
 })
 
+---@diagnostic disable: missing-fields
+
+---@class StatusLine
+---@field devicon string
+---@field devicon_color string
 
 local Space = { provider = ' ' }
 local Align = { provider = "%=" }
@@ -49,7 +53,7 @@ local ViMode = utils.surround({ "", "" }, "bright_bg",
         },
         hl = {
             bg = 'bright_bg',
-            fg = 'bright_fg',
+            fg = 'green',
         },
     }
 )
@@ -70,8 +74,14 @@ local DevIcon = {
 }
 
 local FileName = {
-    provider = "%f :%l :%c %m%r%h%y%q",
-    hl = 'Title',
+    provider = function()
+        local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":.")
+        if not conditions.width_percent_below(#filename, 0.25) then
+            filename = vim.fn.pathshorten(filename)
+        end
+        return filename .. " :%l :%c %m%r%h%q"
+    end,
+    hl = { fg = 'dir_fg', bold = true },
 }
 
 ---@type StatusLine
@@ -97,22 +107,64 @@ local LSPActive = {
     hl = { fg = "green", bold = true },
 }
 
+local DefaultStatusline = {
+    Percentage,
+    Space,
+    ViMode,
+    Space,
+    DevIcon,
+    Space,
+    FileName,
+    Align,
+    LSPActive,
+    Align,
+    FileEncoding,
+}
+
+local TerminalName = {
+    provider = function()
+        local tname, _ = vim.api.nvim_buf_get_name(0) --:gsub(".*:", "")
+        return " " .. tname
+    end,
+    hl = { fg = "blue", bold = true },
+}
+
+local SpecialStatusline = {
+    condition = function()
+        return conditions.buffer_matches({
+            buftype = { "nofile", "prompt", "help", "quickfix" },
+            filetype = { "^git.*", "fugitive" },
+        })
+    end,
+
+    { provider = '%y' },
+    Space,
+    { provider = '%f' },
+    Align
+}
+
+local TerminalStatusline = {
+    condition = function()
+        return conditions.buffer_matches({ buftype = { "terminal" } })
+    end,
+
+    ViMode,
+    Space,
+    { provider = "%y" },
+    Space,
+    TerminalName,
+    Align,
+}
+
 
 heirline.setup({
     opts = {
-        colors = colors,
+        colors = setup_colors(),
     },
     statusline = {
-        Percentage,
-        Space,
-        ViMode,
-        Space,
-        DevIcon,
-        Space,
-        FileName,
-        Align,
-        LSPActive,
-        Align,
-        FileEncoding,
+        fallthrough = false,
+        SpecialStatusline,
+        TerminalStatusline,
+        DefaultStatusline,
     },
 })
