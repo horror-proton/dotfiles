@@ -70,9 +70,12 @@ alias sudo='sudo '
 alias rm='rm --interactive=always'
 alias less='less -R'
 alias j='journalctl --follow'
+alias grep='grep --color=auto'
+alias ip='ip -color=auto'
 
 export LESSHISTFILE=/dev/null
-export LESS='-R'
+export LESS='-RiF --mouse'
+export SYSTEMD_LESS="$LESS"
 
 check_bin ranger && alias ra='ranger'
 
