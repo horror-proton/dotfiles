@@ -44,6 +44,17 @@ return {
     },
 
     {
+        'numToStr/Comment.nvim',
+        config = true,
+        opts = {
+            opleader = {
+                line = 'gc',
+                block = '<C-/>',
+            },
+        }
+    },
+
+    {
         'SirVer/ultisnips',
         config = function()
             vim.cmd [[syntax enable]]
