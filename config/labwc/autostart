@@ -1,5 +1,8 @@
 /usr/lib/xdg-desktop-portal-wlr &
 /usr/lib/polkit-kde-authentication-agent-1 &
-sfwbar &
-dunst &
-fcitx5 &
+
+export PATH="$HOME/dotfiles/lib:$PATH"
+
+de-launch-app sfwbar
+de-launch-app dunst
+de-launch-app fcitx5

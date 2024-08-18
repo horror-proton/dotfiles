@@ -1,0 +1,17 @@
+#!/usr/bin/bash
+
+app=${1:?}
+shift
+
+launcher=$(</proc/$PPID/comm)
+appname=$app
+
+if [[ -n "$FUZZEL_DESKTOP_FILE_ID" ]]; then
+    appname=${FUZZEL_DESKTOP_FILE_ID%.desktop}
+fi
+
+unit_name=app-"$launcher"-"$appname"-$RANDOM
+
+mapfile -d '' < /proc/self/environ
+
+exec systemd-run --user --unit="$unit_name" --slice=app.slice "${MAPFILE[@]/#/--setenv=}" -- "$app" "$@"

@@ -25,10 +25,10 @@
     <default />
     <!-- Use a different terminal emulator -->
     <keybind key="W-Return">
-      <action name="Execute" command="foot" />
+      <action name="Execute" command="~/dotfiles/lib/de-launch-app foot" />
     </keybind>
     <keybind key="W-R">
-      <action name="Execute" command="fuzzel" />
+      <action name="Execute" command="bash -c 'PATH=~/dotfiles/lib:$PATH fuzzel'" />
     </keybind>
     <keybind key="Print">
       <action name="Execute" command="flameshot gui"/>
