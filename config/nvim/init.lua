@@ -35,6 +35,11 @@ vim.g.load_doxygen_syntax = 1
 
 opt.mouse = 'a'
 
+if os.getenv('SSH_TTY') ~= nil then
+    opt.scrolljump = -40
+end
+
+vim.g.python3_host_prog = '/usr/bin/python3' -- in case in venv
 
 kmap({ '', 'i' }, '<C-s>', function() print(cmd('update')) end)
 
@@ -78,4 +83,3 @@ end
 
 require('lazy_nvim')
 require('fcitx')
-
