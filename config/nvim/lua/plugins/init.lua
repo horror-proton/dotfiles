@@ -7,7 +7,7 @@ return {
         lazy = false,
         priority = 1000,
         config = function()
-            -- vim.cmd([[colorscheme nord]])
+            -- vim.cmd('colorscheme nord')
         end,
     },
 
@@ -16,7 +16,35 @@ return {
         lazy = false,
         priority = 1000,
         config = function()
-            vim.cmd([[colorscheme tokyonight-night]])
+            vim.cmd('colorscheme tokyonight-night')
+            local function set_bold(name)
+                local old = vim.api.nvim_get_hl(0, { name = name })
+                old.bold = true
+                vim.api.nvim_set_hl(0, name, old)
+            end
+            set_bold('@keyword')
+            for _, ctg in ipairs({
+                'coroutine',
+                'function',
+                'operator',
+                'import',
+                --'type',
+                --'modifier',
+                'repeat',
+                'return',
+                'exception',
+                'conditional',
+                'directive',
+            }) do
+                set_bold('@keyword.' .. ctg)
+            end
+
+            set_bold('@type')
+            set_bold('@type.builtin')
+            set_bold('Statement')
+            set_bold('PreProc')
+            set_bold('Special')
+            --vim.api.nvim_set_hl(0, 'Function', { bold = true })
         end,
     },
 
@@ -57,7 +85,7 @@ return {
     {
         'SirVer/ultisnips',
         config = function()
-            vim.cmd [[syntax enable]]
+            vim.cmd 'syntax enable'
             vim.g.syntax = true
             vim.g.UltiSnipsExpandTrigger = "<tab>"
             vim.g.UltiSnipsJumpForwardTrigger = "<tab>"
@@ -202,7 +230,7 @@ return {
     {
         'lervag/vimtex',
         config = function()
-            vim.cmd [[syntax enable]]
+            vim.cmd 'syntax enable'
             vim.g.syntax = true
             vim.g.vimtex_syntax_conceal = { math_bounds = 0 }
             vim.g.vimtex_view_method = 'general'
@@ -304,7 +332,7 @@ return {
             })
 
             vim.keymap.set("n", "<leader>t", function()
-                vim.cmd([[:Neotree toggle]])
+                vim.cmd(':Neotree toggle')
             end)
         end
     },
