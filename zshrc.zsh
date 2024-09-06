@@ -60,8 +60,9 @@ check_bin bat && export MANPAGER="sh -c 'col -bx | bat -l man -p'" GROFF_NO_SGR=
 
 alias ls='ls --color=tty'
 
+# use --smart-group ?
 check_bin eza &&
-    alias l='eza -lah --icons --git --mounts --color-scale=size --time-style=iso' ||
+    alias l='eza -lah --group --icons --git --mounts --color-scale=size --time-style=iso' ||
     alias l='ls -lAh'
 alias ll='ls -lh'
 alias la='ls -lAh'
@@ -207,14 +208,22 @@ else
     prompt fade red
 fi
 
-precmd() {
-    print -Pn "\e]133;A\e\\"
+_clear_title() {
     print -Pn "\e];zsh\e\\"
 }
+_foot_jumg_prompts() {
+    print -Pn "\e]133;A\e\\"
+}
 
-preexec() {
+_set_title() {
     print -Pn "\e];$1\e\\"
 }
+
+if [ "$TERM" != "linux" ]; then
+    add-zsh-hook precmd _foot_jumg_prompts
+    add-zsh-hook precmd _clear_title
+    add-zsh-hook preexec _set_title
+fi
 
 function osc7-pwd() {
     emulate -L zsh

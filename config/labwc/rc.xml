@@ -8,10 +8,20 @@
 <labwc_config>
 
   <theme>
-    <name></name>
+    <name>Natura</name>
     <cornerRadius>8</cornerRadius>
-    <font name="sans" size="10" />
+    <font name="sans" size="10" weight="bold" />
   </theme>
+
+  <focus>
+    <followMouse>yes</followMouse>
+    <followMouseRequiresMovement>yes</followMouseRequiresMovement>
+    <raiseOnFocus>no</raiseOnFocus>
+  </focus>
+
+  <placement>
+    <policy>cascade</policy>
+  </placement>
 
   <libinput>
     <device category="touchpad">
