@@ -2,7 +2,6 @@ local utility = require('utility')
 
 local opt = vim.opt
 local cmd = vim.cmd
-local uv = utility.uv
 local kmap = utility.kmap
 
 opt.scrolloff = 5
@@ -56,46 +55,7 @@ for type, icon in pairs({ Error = "►", Warn = "⚠", Hint = "", Info = "
     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
 
-local function move_log()
-    if uv.os_uname().sysname ~= 'Linux' then
-        return true
-    end
+require('tmplog')
 
-    local files = {
-        vim.lsp.get_log_path(),
-    }
-
-
-    local main_log = vim.fn.expand('$NVIM_LOG_FILE')
-
-    local tmp_dir = vim.fn.expand('/tmp/nvim/$UID')
-    vim.fn.mkdir(tmp_dir, 'p')
-
-    for _, file in ipairs(files) do
-        vim.fn.mkdir(vim.fs.dirname(file), 'p')
-        local fname = vim.fs.basename(file)
-        local tmpfile = vim.fs.joinpath(tmp_dir, fname)
-        if uv.fs_stat(file) then
-            local dest = uv.fs_readlink(file)
-            if dest and dest == tmpfile then
-                goto continue
-            end
-            assert(uv.fs_copyfile(file, tmpfile))
-        else
-            local newfile = assert(io.open(tmpfile, 'a+'))
-            newfile:write(string.format("Creating %s", tmpfile))
-            newfile:close()
-        end
-        os.remove(file)
-        assert(uv.fs_symlink(tmpfile, file))
-        ::continue::
-    end
-end
-
-do
-    local _, err = pcall(move_log)
-    if err then vim.fn.input(err) end
-end
-
-require('lazy_nvim')
 require('fcitx')
+require('lazy_nvim')
