@@ -296,7 +296,7 @@ lspconfig.qmlls.setup {
 }
 
 -- Enable some language servers with the additional completion capabilities offered by nvim-cmp
-local servers = { 'cmake', 'bashls', 'hls', 'tsserver', 'jsonls' }
+local servers = { 'cmake', 'bashls', 'hls', 'ts_ls', 'jsonls' }
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup {
         on_attach = attach,
