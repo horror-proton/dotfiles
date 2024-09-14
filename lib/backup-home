@@ -1,0 +1,136 @@
+#!/usr/bin/bash
+set -e
+
+# inspired by snap-sync
+
+cfg=${1:-home}
+
+backup_dir=/mnt/fx/$(</etc/machine-id)/$cfg
+
+cap_btrfs=""
+
+captext="cap_sys_admin,cap_chown,cap_dac_override,cap_fowner+eip"
+# sudo capsh --caps=xxx,cap_setuid,cap_setgid+eip --user=arch --addamb=xxx --
+
+_ssh() {
+    ssh aorus -- "$@"
+}
+_ssh_t() {
+    ssh aorus -t -- "$@"
+}
+
+prepare_capabilities() {
+    local loc=~/.cache/cap_btrfs
+    printf "sudo in local machine:\n"
+    cp "$(command -v btrfs)" "$loc" && sudo setcap "$captext" "$loc"
+    printf "sudo in remote machine:\n"
+    _ssh_t 'cp "$(command -v btrfs)" '"$loc && sudo setcap $captext $loc"
+    cap_btrfs="$loc"
+}
+
+_snapper() {
+    snapper -c "$cfg" "$@"
+}
+
+_btrfs_send() {
+    "$cap_btrfs" send --proto 2 --compressed-data "$@"
+}
+
+_btrfs_receive() {
+    _ssh "$cap_btrfs" receive "$@"
+}
+
+local_subvolume=$(_snapper --jsonout get-config | jq -r '.SUBVOLUME')
+
+old_num=""
+new_num=""
+
+inc_args=()
+
+prepare_capabilities
+
+prepare_old_snapshot() {
+    local remote_snapshot="$backup_dir"/snapshot
+    local remote_machine
+    remote_machine=$(_ssh cat /etc/machine-id)
+    if ! _ssh test -e "$remote_snapshot"; then
+        printf "Remote snapshot does not exist\n"
+        return 1
+    fi
+    printf "Found remote snapshot\t%s\n" "$remote_snapshot"
+
+    old_num=$(_snapper --jsonout list | jq -r ".[].[]|select(.userdata.machine==\"$remote_machine\" and .userdata.dir==\"$backup_dir\")|.number")
+    if [[ -z "$old_num" ]]; then
+        printf "Local snapshot does not exist\n"
+        return 1
+    fi
+    printf "Found local snapshot\t#%s\n" "$old_num"
+
+}
+
+prepare_snapshot() {
+    local out1
+    out1=$(_snapper list)
+    printf "Creating new snapshot...\t"
+    new_num=$(_snapper create --print-number --description "syncing")
+    printf "got #%s\n" "$new_num"
+    if [[ -z "$new_num" ]]; then
+        return 1
+    fi
+    diff <(cat <<<"$out1") <(_snapper list) || true
+}
+
+remove_snapshot() {
+    printf "Removing snapshot #%s...\t" "$1"
+    _snapper delete "$1" || return 1
+    printf "done\n"
+}
+
+modify_new_snapshot() {
+    local remote_machine
+    remote_machine=$(_ssh cat /etc/machine-id)
+    local userdata="machine=$remote_machine, dir=$backup_dir"
+    local out1
+    out1=$(_snapper list)
+    if ! _snapper modify --description "synced" --userdata "$userdata" "$new_num"; then
+        printf "Failed to modify snapshot\n"
+        return 1
+    fi
+    diff <(cat <<<"$out1") <(_snapper list) || true
+}
+
+do_sync() {
+    _ssh mkdir -p "$backup_dir"
+    printf "Syncing...\n"
+    _btrfs_send -v "${inc_args[@]}" "$local_subvolume"/.snapshots/"$new_num"/snapshot | pv | _btrfs_receive "$backup_dir"
+}
+
+if prepare_old_snapshot; then
+    _ssh mv "$backup_dir"/{snapshot,old}
+    inc_args+=(-c "$local_subvolume"/.snapshots/"$old_num"/snapshot)
+else
+    printf "No old snapshot found!!!\n"
+    printf "Will sync the whole subvolume\n"
+fi
+
+if ! prepare_snapshot; then
+    echo "Failed to create snapshot"
+    exit 1
+fi
+
+if ! do_sync; then
+    echo "Failed to sync"
+    if [[ -n "$old_num" ]]; then
+        _ssh mv "$backup_dir"/{old,snapshot}
+    fi
+    remove_snapshot "$new_num"
+    exit 1
+fi
+
+if [[ -n "$old_num" ]]; then
+    _ssh "$cap_btrfs" subvolume delete "$backup_dir"/old
+    remove_snapshot "$old_num"
+fi
+
+modify_new_snapshot
+
