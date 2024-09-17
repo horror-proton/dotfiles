@@ -7,9 +7,10 @@ cfg=${1:-home}
 
 backup_dir=/mnt/fx/$(</etc/machine-id)/$cfg
 
-cap_btrfs=""
+cap_btrfs="false"
+cap_btrfs_remote="false"
 
-captext="cap_sys_admin,cap_chown,cap_dac_override,cap_fowner+eip"
+captext="cap_sys_admin,cap_chown,cap_dac_override,cap_fowner,cap_setfcap+eip"
 # sudo capsh --caps=xxx,cap_setuid,cap_setgid+eip --user=arch --addamb=xxx --
 
 _ssh() {
@@ -20,12 +21,19 @@ _ssh_t() {
 }
 
 prepare_capabilities() {
-    local loc=~/.cache/cap_btrfs
-    printf "sudo in local machine:\n"
-    cp "$(command -v btrfs)" "$loc" && sudo setcap "$captext" "$loc"
-    printf "sudo in remote machine:\n"
-    _ssh_t 'cp "$(command -v btrfs)" '"$loc && sudo setcap $captext $loc"
-    cap_btrfs="$loc"
+    local loc=${XDG_STATE_HOME:-$HOME/.local/state}/cap_btrfs
+    if ! capsh --has-p=cap_sys_admin && ! cmp "$(command -v btrfs)" "$loc"; then
+        printf "sudo in local machine:\n"
+        cp "$(command -v btrfs)" "$loc" && sudo setcap "$captext" "$loc"
+    fi
+    local remote_loc
+    remote_loc=$(_ssh "echo \${XDG_STATE_HOME:-\$HOME/.local/state}/cap_btrfs")
+    if _ssh "! capsh --has-p=cap_sys_admin && ! cmp $(command -v btrfs) $remote_loc"; then
+        printf "sudo in remote machine:\n"
+        _ssh_t "cp \$(command -v btrfs) $remote_loc && sudo setcap $captext $remote_loc"
+    fi
+    cap_btrfs=$loc
+    cap_btrfs_remote=$remote_loc
 }
 
 _snapper() {
@@ -37,7 +45,7 @@ _btrfs_send() {
 }
 
 _btrfs_receive() {
-    _ssh "$cap_btrfs" receive "$@"
+    _ssh "$cap_btrfs_remote" receive "$@"
 }
 
 local_subvolume=$(_snapper --jsonout get-config | jq -r '.SUBVOLUME')
@@ -120,15 +128,16 @@ fi
 
 if ! do_sync; then
     echo "Failed to sync"
+    _ssh "test -e $backup_dir/snapshot && mv -v $backup_dir/{snapshot,snapshot_failed}" || true
     if [[ -n "$old_num" ]]; then
-        _ssh mv "$backup_dir"/{old,snapshot}
+        _ssh mv -v "$backup_dir"/{old,snapshot}
     fi
     remove_snapshot "$new_num"
     exit 1
 fi
 
 if [[ -n "$old_num" ]]; then
-    _ssh "$cap_btrfs" subvolume delete "$backup_dir"/old
+    _ssh "$cap_btrfs_remote" subvolume delete "$backup_dir"/old
     remove_snapshot "$old_num"
 fi
 
