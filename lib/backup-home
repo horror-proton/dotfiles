@@ -3,9 +3,22 @@ set -e
 
 # inspired by snap-sync
 
-cfg=${1:-home}
+cfg='home'
+remote_vault='aorus:/mnt/fx'
 
-backup_dir=/mnt/fx/$(</etc/machine-id)/$cfg
+while getopts 'c:r:' arg; do
+    case "$arg" in
+        c) cfg="$OPTARG" ;;
+        r) remote_vault=$OPTARG ;;
+        *) exit 1 ;;
+    esac
+done
+
+remote_dir=${remote_vault#*:}
+remote_hostname=${remote_vault%%"$remote_dir"}
+remote_hostname=${remote_hostname%:}
+
+backup_dir=${remote_dir}/$(</etc/machine-id)/$cfg
 
 cap_btrfs="false"
 cap_btrfs_remote="false"
@@ -14,10 +27,18 @@ captext="cap_sys_admin,cap_chown,cap_dac_override,cap_fowner,cap_setfcap+eip"
 # sudo capsh --caps=xxx,cap_setuid,cap_setgid+eip --user=arch --addamb=xxx --
 
 _ssh() {
-    ssh aorus -- "$@"
+    if [[ -n "$remote_hostname" ]]; then
+        ssh "$remote_hostname" -- "$@"
+    else
+        "$@"
+    fi
 }
 _ssh_t() {
-    ssh aorus -t -- "$@"
+    if [[ -n "$remote_hostname" ]]; then
+        ssh "$remote_hostname" -t -- "$@"
+    else
+        "$@"
+    fi
 }
 
 prepare_capabilities() {
@@ -108,9 +129,14 @@ modify_new_snapshot() {
 }
 
 do_sync() {
-    _ssh mkdir -p "$backup_dir"
+    _ssh mkdir -p "$backup_dir" || return 1
     printf "Syncing...\n"
-    _btrfs_send -v "${inc_args[@]}" "$local_subvolume"/.snapshots/"$new_num"/snapshot | pv | _btrfs_receive "$backup_dir"
+    (
+        set -o pipefail;
+        _btrfs_send -v "${inc_args[@]}" "$local_subvolume"/.snapshots/"$new_num"/snapshot | \
+            pv --rate-limit 1M | \
+            _btrfs_receive "$backup_dir"
+    )
 }
 
 if prepare_old_snapshot; then

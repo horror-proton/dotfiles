@@ -1,0 +1,12 @@
+[Unit]
+Description=terminal multiplexer
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/tmux -D
+# ExecStartPost=/usr/bin/tmux new-session -s %u -d
+# ExecStop=/usr/bin/tmux kill-session -t %u
+ExecStop=/usr/bin/tmux kill-server
+
+[Install]
+WantedBy=default.target
