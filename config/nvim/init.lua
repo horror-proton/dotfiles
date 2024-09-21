@@ -56,6 +56,7 @@ for type, icon in pairs({ Error = "►", Warn = "⚠", Hint = "", Info = "
 end
 
 require('tmplog')
+require('desktop_notify')
 
 require('fcitx')
 require('lazy_nvim')
