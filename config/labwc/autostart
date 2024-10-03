@@ -1,7 +1,11 @@
-/usr/lib/xdg-desktop-portal-wlr &
-/usr/lib/polkit-kde-authentication-agent-1 &
+# export XDG_DESKTOP_PORTAL_DIR=~/.config/xdg-desktop-portal/portals
+# systemctl --user set-environment XDG_DESKTOP_PORTAL_DIR=$XDG_DESKTOP_PORTAL_DIR
 
 export PATH="$HOME/dotfiles/lib:$PATH"
+
+/usr/lib/xdg-desktop-portal-wlr -v &
+/usr/lib/xdg-desktop-portal-gtk -v &
+/usr/lib/polkit-kde-authentication-agent-1 &
 
 de-launch-app sfwbar
 de-launch-app dunst
