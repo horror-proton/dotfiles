@@ -12,11 +12,16 @@ return {
     },
 
     {
-        "folke/tokyonight.nvim",
+        "catppuccin/nvim",
+        name = "catppuccin",
         lazy = false,
         priority = 1000,
         config = function()
-            vim.cmd('colorscheme tokyonight-night')
+            require("catppuccin").setup {
+                flavour = "mocha",
+            }
+            vim.cmd.colorscheme "catppuccin"
+
             local function set_bold(name)
                 local old = vim.api.nvim_get_hl(0, { name = name })
                 old.bold = true
@@ -203,6 +208,13 @@ return {
     {
         "iamcco/markdown-preview.nvim",
         build = function() vim.fn["mkdp#util#install"]() end,
+    },
+
+    {
+        "MeanderingProgrammer/render-markdown.nvim",
+        config = function()
+            require('render-markdown').setup({})
+        end,
     },
 
     {
