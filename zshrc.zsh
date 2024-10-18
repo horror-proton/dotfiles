@@ -197,6 +197,9 @@ for plg in {/usr,~/.local}/share/zsh/plugins/*/*.plugin.zsh; do
 done
 unsetopt NULL_GLOB
 
+exit_zsh() { exit 0 }
+zle -N exit_zsh
+bindkey '^D' exit_zsh
 
 setterm -blength 0 2> /dev/null
 
