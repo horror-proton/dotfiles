@@ -178,7 +178,7 @@ lspconfig['clangd'].setup {
     capabilities = { offsetEncoding = 'utf-16' },
     cmd = {
         "clangd",
-        "--background-index",
+        "--background-index=false",
         "--clang-tidy",
         "--enable-config",
         "--fallback-style=llvm",
@@ -187,6 +187,7 @@ lspconfig['clangd'].setup {
         "--header-insertion=iwyu",
         "--header-insertion-decorators",
         "--pch-storage=memory",
+        "--malloc-trim",
     },
 }
 require("clangd_extensions").setup {
