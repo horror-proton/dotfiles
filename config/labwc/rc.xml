@@ -11,6 +11,7 @@
     <name>catppuccin-mocha</name>
     <cornerRadius>8</cornerRadius>
     <font name="sans" size="10" weight="bold" />
+    <dropShadows>yes</dropShadows>
   </theme>
 
   <focus>
