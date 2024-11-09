@@ -11,13 +11,16 @@ fi
 
 unit_name=app-"$launcher"-"$appname"-$RANDOM
 
-mapfile -d '' < /proc/self/environ
+mapfile -d '' </proc/self/environ
 
 run_args=(
     --user
     --unit="$unit_name"
     --slice=app.slice
     --collect
+    -p SuccessExitStatus=130
+    -p ExitType=cgroup
+    -p SyslogLevel=debug
 )
 
 exec systemd-run "${run_args[@]}" "${MAPFILE[@]/#/--setenv=}" -- "$@"
