@@ -1,0 +1,23 @@
+#!/usr/bin/bash
+
+# Run a shell with ambient capabilities,
+# useful when accessing directories without execute permissions
+
+# Similar to
+# capsh --caps=cap_setuid,cap_setgid,cap_dac_override,xxx+eip
+# --user=$USER --addamb=cap_dac_override,xxx --shell=$SHELL --
+
+ambient=(
+    CAP_DAC_OVERRIDE
+    CAP_FOWNER
+    CAP_CHOWN
+)
+
+properties=(
+    AmbientCapabilities="${ambient[*]}"
+    # "${ambient[@]/#/AmbientCapabilities=}"
+)
+
+set -x
+exec run0 --user="$USER" --slice-inherit "${properties[@]/#/--property=}" \
+    -- "${SHELL:-/usr/bin/bash}"
