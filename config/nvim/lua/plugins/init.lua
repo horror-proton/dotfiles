@@ -246,6 +246,12 @@ return {
             vim.g.syntax = true
             vim.g.vimtex_syntax_conceal = { math_bounds = 0 }
             vim.g.vimtex_view_method = 'general'
+            vim.g.vimtex_compiler_latexmk = {
+                out_dir = 'build',
+                options = {
+                    '-verbose',
+                },
+            }
         end,
     },
 
