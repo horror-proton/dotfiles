@@ -112,6 +112,18 @@ return {
     },
 
     {
+        'kevinhwang91/nvim-ufo',
+        dependencies = { 'kevinhwang91/promise-async' },
+        config = function()
+            require('ufo').setup()
+            vim.o.foldcolumn = '1'
+            vim.o.foldlevel = 99
+            vim.o.foldlevelstart = 99
+            vim.o.foldenable = true
+        end,
+    },
+
+    {
         'hrsh7th/nvim-cmp',
         config = function()
             -- configured in plugins.nvim-lspconfig
