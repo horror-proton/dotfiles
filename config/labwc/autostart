@@ -3,10 +3,12 @@
 
 export PATH="$HOME/dotfiles/lib:$PATH"
 
-/usr/lib/xdg-desktop-portal-wlr -v &
+/usr/lib/xdg-desktop-portal-wlr -l INFO &
 /usr/lib/xdg-desktop-portal-gtk -v &
 /usr/lib/polkit-kde-authentication-agent-1 &
 
 de-launch-app sfwbar
 de-launch-app dunst
 de-launch-app fcitx5
+de-launch-app wbg ~/Pictures/wallpaper || true
+de-launch-app wl-clip-persist --clipboard regular || true
