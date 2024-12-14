@@ -15,6 +15,7 @@ mapfile -d '' </proc/self/environ
 
 run_args=(
     --user
+    --same-dir
     --unit="$unit_name"
     --slice=app.slice
     --collect

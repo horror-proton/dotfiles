@@ -19,5 +19,5 @@ properties=(
 )
 
 set -x
-exec run0 --user="$USER" --slice-inherit "${properties[@]/#/--property=}" \
+exec run0 --user="$USER" --chdir="$PWD" --slice-inherit "${properties[@]/#/--property=}" \
     -- "${SHELL:-/usr/bin/bash}"
