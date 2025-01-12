@@ -24,4 +24,10 @@ run_args=(
     -p SyslogLevel=debug
 )
 
-exec systemd-run "${run_args[@]}" "${MAPFILE[@]/#/--setenv=}" -- "$@"
+if [[ $XDG_CURRENT_DESKTOP == labwc* ]]; then
+    run_args+=(-p EnvironmentFile="$HOME"/.config/labwc/environment)
+else
+    run_args+=("${MAPFILE[@]/#/--setenv=}")
+fi
+
+exec systemd-run "${run_args[@]}" -- "$@"
