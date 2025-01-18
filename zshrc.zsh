@@ -169,12 +169,17 @@ function cmake() {
             flag=1
         fi
     done
+    local old=$(</proc/$$/oom_score_adj)
+    echo 1000 > /proc/$$/oom_score_adj
     if ((flag)); then
         printf "zshrc: executing with CMAKE_EXPORT_COMPILE_COMMANDS ON\n"
         command cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON "$@"
     else
         command cmake "$@"
     fi
+    local ret=$?
+    echo "$old" > /proc/$$/oom_score_adj
+    return $ret
 }
 
 
