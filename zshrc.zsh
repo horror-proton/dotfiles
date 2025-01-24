@@ -193,6 +193,7 @@ zstyle ':completion:*:messages' format $'\e[01;35m -- %d --\e[0m'
 zstyle ':completion:*:warnings' format $'\e[01;31m -- No Matches Found --\e[0m'
 compdef watch=command
 compdef proxychains=command
+compdef intercept-build=command
 
 export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
