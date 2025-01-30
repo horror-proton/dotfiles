@@ -316,17 +316,8 @@ return {
     },
 
     {
-        "dstein64/nvim-scrollview",
-        config = function()
-            require('scrollview').setup({
-                excluded_filetypes = { 'NvimTree' },
-                current_only = true,
-                winblend = 75,
-                base = 'right',
-                signs_on_startup = { 'all' },
-                diagnostics_severities = { vim.diagnostic.severity.ERROR }
-            })
-        end,
+        'lewis6991/satellite.nvim',
+        config = true,
     },
 
     { 'github/copilot.vim' },
