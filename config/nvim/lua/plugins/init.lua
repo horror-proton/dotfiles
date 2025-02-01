@@ -50,6 +50,10 @@ return {
             set_bold('PreProc')
             set_bold('Special')
             --vim.api.nvim_set_hl(0, 'Function', { bold = true })
+
+            local old = vim.api.nvim_get_hl(0, { name = 'DiagnosticVirtualTextWarn' })
+            old.fg = '#a0a080'
+            vim.api.nvim_set_hl(0, 'DiagnosticVirtualTextWarn', old)
         end,
     },
 

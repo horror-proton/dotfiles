@@ -50,7 +50,10 @@ kmap("v", { "<M-S-j>", "<M-S-Down>" }, ":m '>+1<cr>gv=gv", { desc = "Move down" 
 kmap("v", { "<M-S-k>", "<M-S-Up>" }, ":m '<-2<cr>gv=gv", { desc = "Move up" })
 
 vim.diagnostic.config({
-    virtual_text = true,
+    virtual_text = {
+        prefix = '🠴',
+        spacing = 8,
+    },
     virtual_line = true,
     severity_sort = true,
     update_in_insert = true,
