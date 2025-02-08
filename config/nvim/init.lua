@@ -67,6 +67,8 @@ vim.diagnostic.config({
     }
 })
 
+vim.filetype.add({ extension = { json = 'jsonc' }, })
+
 require('tmplog')
 require('desktop_notify')
 
