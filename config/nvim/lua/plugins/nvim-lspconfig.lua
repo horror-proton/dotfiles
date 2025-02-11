@@ -177,22 +177,47 @@ lspconfig.lua_ls.setup {
     },
 }
 
+local clangd_argv = {
+    "clangd",
+    -- TODO: set false for non tmpfs
+    --"--background-index=false",
+    "--clang-tidy",
+    "--enable-config",
+    "--fallback-style=llvm",
+    "--all-scopes-completion",
+    "--completion-style=detailed",
+    "--function-arg-placeholders",
+    "--header-insertion=iwyu",
+    "--header-insertion-decorators",
+    "--pch-storage=memory",
+    "--malloc-trim",
+}
+
+local clangd_cmd = { 'bash', '-c',
+    'bwrap --dev-bind / / --tmpfs $PWD/.cache -- ' ..
+    table.concat(clangd_argv, ' ')
+}
+
 lspconfig['clangd'].setup {
     on_attach = attach,
     capabilities = { offsetEncoding = 'utf-16' },
-    cmd = {
-        "clangd",
-        "--background-index=false",
-        "--clang-tidy",
-        "--enable-config",
-        "--fallback-style=llvm",
-        "--all-scopes-completion",
-        "--completion-style=detailed",
-        "--header-insertion=iwyu",
-        "--header-insertion-decorators",
-        "--pch-storage=memory",
-        "--malloc-trim",
-    },
+    root_dir = function(fname)
+        vim.lsp.log.info("root_dir", fname)
+        return lspconfig.util.root_pattern(
+                'build',
+                '.clangd',
+                '.clang-tidy',
+                '.clang-format',
+                'compile_commands.json',
+                'compile_flags.txt',
+                'configure.ac',
+                'CMakeLists.txt',
+                'Makefile',
+                'meson.build'
+            )(fname)
+            or vim.fs.dirname(vim.fs.find('.git', { path = fname, upward = true })[1])
+    end,
+    cmd = clangd_cmd,
 }
 require("clangd_extensions").setup {
     -- defaults:
