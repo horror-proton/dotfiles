@@ -179,8 +179,6 @@ lspconfig.lua_ls.setup {
 
 local clangd_argv = {
     "clangd",
-    -- TODO: set false for non tmpfs
-    --"--background-index=false",
     "--clang-tidy",
     "--enable-config",
     "--fallback-style=llvm",
@@ -193,10 +191,21 @@ local clangd_argv = {
     "--malloc-trim",
 }
 
-local clangd_cmd = { 'bash', '-c',
-    'bwrap --dev-bind / / --tmpfs $PWD/.cache -- ' ..
-    table.concat(clangd_argv, ' ')
-}
+local has_bwrap = vim.fn.executable('bwrap') == 1
+
+if not has_bwrap then
+    table.insert(clangd_argv, "--background-index=false")
+end
+
+local clangd_cmd =
+    has_bwrap
+    and
+    { 'bash', '-c',
+        'bwrap --dev-bind / / --tmpfs $PWD/.cache -- ' ..
+        table.concat(clangd_argv, ' ')
+    }
+    or
+    clangd_argv
 
 lspconfig['clangd'].setup {
     on_attach = attach,
