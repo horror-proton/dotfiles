@@ -10,5 +10,10 @@ export PATH="$HOME/dotfiles/lib:$PATH"
 de-launch-app sfwbar
 de-launch-app dunst
 de-launch-app fcitx5
+de-launch-app swayidle -d \
+    timeout 600 \
+    'set -x; wlopm --off \*; acpi_listen | /usr/bin/grep --line-buffered -e VIDEOOUT\ plug | { head -n1 && wlopm --off \*; /usr/bin/kill -INT -$$; }' \
+    resume \
+    'wlopm --on \*' || true
 de-launch-app wbg ~/Pictures/wallpaper || true
 de-launch-app wl-clip-persist --clipboard regular || true
