@@ -195,6 +195,10 @@ compdef watch=command
 compdef proxychains=command
 compdef intercept-build=command
 
+for cmd in nm objdump readelf strip gcc g++; do
+    compdef riscv64-linux-gnu-$cmd=$cmd
+done
+
 export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
 setopt NULL_GLOB # language server does not recognize foo(N)
