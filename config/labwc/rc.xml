@@ -28,6 +28,7 @@
     <device category="touchpad">
       <naturalScroll>yes</naturalScroll>
       <disableWhileTyping>no</disableWhileTyping>
+      <dragLock>no</dragLock>
     </device>
   </libinput>
 
