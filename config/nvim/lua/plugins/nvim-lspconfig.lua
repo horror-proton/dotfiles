@@ -153,7 +153,7 @@ if pcall(require, 'lazy') then
         table.insert(nvim_runtime, vim.fs.normalize(lazy_root .. '/' .. dir))
     end
 end
-lspconfig.lua_ls.setup {
+vim.lsp.config('lua_ls', {
     on_attach = attach,
     capabilities = capabilities,
     settings = {
@@ -175,7 +175,7 @@ lspconfig.lua_ls.setup {
             },
         },
     },
-}
+})
 
 local clangd_argv = {
     "clangd",
@@ -207,7 +207,7 @@ local clangd_cmd =
     or
     clangd_argv
 
-lspconfig['clangd'].setup {
+vim.lsp.config('clangd', {
     on_attach = attach,
     capabilities = { offsetEncoding = 'utf-16' },
     root_dir = function(fname)
@@ -227,7 +227,8 @@ lspconfig['clangd'].setup {
             or vim.fs.dirname(vim.fs.find('.git', { path = fname, upward = true })[1])
     end,
     cmd = clangd_cmd,
-}
+})
+
 require("clangd_extensions").setup {
     -- defaults:
     -- Automatically set inlay hints (type hints)
@@ -291,7 +292,7 @@ require("clangd_extensions").setup {
     },
 }
 
-lspconfig.rust_analyzer.setup {
+vim.lsp.config('rust_analyzer', {
     on_attach = attach,
     capabilities = capabilities,
     settings = {
@@ -310,12 +311,12 @@ lspconfig.rust_analyzer.setup {
             enable = true,
         },
     },
-}
+})
 
 -- paru -S python-lsp-server
 -- paru -S yapf python-whatthepatch python-toml
 -- paru -S python-pycodestyle
-lspconfig.pylsp.setup {
+vim.lsp.config('pylsp', {
     on_attach = attach,
     capabilities = capabilities,
     settings = {
@@ -328,17 +329,17 @@ lspconfig.pylsp.setup {
         },
     },
     cmd = { "pylsp", "-v" },
-}
+})
 
-lspconfig.qmlls.setup {
+vim.lsp.config('qmlls', {
     cmd = { 'qmlls6', '--log-file', '/dev/stderr' }
-}
+})
 
 -- Enable some language servers with the additional completion capabilities offered by nvim-cmp
-local servers = { 'cmake', 'bashls', 'hls', 'ts_ls', 'jsonls' }
+local servers = { 'cmake', 'bashls', 'hls', 'ts_ls', 'jsonls', 'zls', 'svelte' }
 for _, lsp in ipairs(servers) do
-    lspconfig[lsp].setup {
+    vim.lsp.config(lsp, {
         on_attach = attach,
         capabilities = capabilities,
-    }
+    })
 end
