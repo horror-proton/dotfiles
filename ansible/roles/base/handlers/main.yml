@@ -1,0 +1,3 @@
+- name: grub-mkconfig
+  command:
+    cmd: grub-mkconfig -o /boot/grub/grub.cfg

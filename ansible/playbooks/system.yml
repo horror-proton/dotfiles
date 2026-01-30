@@ -1,0 +1,7 @@
+- name: Basic
+  hosts: localhost
+  become: true
+  roles:
+    - base
+    - services
+

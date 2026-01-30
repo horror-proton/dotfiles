@@ -1,0 +1,44 @@
+- name: Install basic tools
+  pacman:
+    name:
+      - base-devel
+      - vim
+      - cmake
+      - git
+      - rsync
+      - pacman-contrib
+
+- name: Write pacman custom config
+  copy:
+    dest: /etc/pacman.d/custom.conf
+    content: |
+      [archlinuxcn]
+      # Server = https://repo.archlinuxcn.org/$arch
+      Server = https://mirrors.bfsu.edu.cn/archlinuxcn/$arch
+      [options]
+      Color
+      VerbosePkgLists
+      ParallelDownloads = 10
+
+- name: Apply pacman custom config
+  register: alcn
+  lineinfile:
+    path: /etc/pacman.conf
+    line: Include = /etc/pacman.d/custom.conf
+
+- name: Install archlinuxcn-keyring
+  when: alcn.changed
+  pacman:
+    update_cache: true
+    name: [ archlinuxcn-keyring ]
+
+# kernel:
+
+- name: Grub kernel params
+  lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
+    line: GRUB_CMDLINE_LINUX_DEFAULT="loglevel=7 sysrq_always_enabled=1 "
+  notify: grub-mkconfig
+
+
