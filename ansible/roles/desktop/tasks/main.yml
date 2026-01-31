@@ -1,0 +1,105 @@
+- name: Install desktop components
+  pacman:
+    name:
+      - zsh-theme-powerlevel10k-git
+
+      - htop
+      - nvtop
+      - ncdu
+
+      - ttf-nerd-fonts-symbols-mono
+      - ttf-nerd-fonts-symbols
+      - noto-fonts-emoji 
+
+      - fcitx5-chinese-addons
+      - fcitx5-configtool
+
+      - pipewire-jack
+      - pipewire-alsa
+      - pipewire-pulse
+
+      - niri
+      - foot
+      - bat
+      - fuzzel
+      - xdg-desktop-portal-gnome
+      - xdg-desktop-portal-wlr
+      - polkit-kde-agent
+      - xwayland-satellite
+      - dunst
+
+      - breeze
+      - breeze-gtk
+      - qt6ct
+
+      - qt6-multimedia-ffmpeg
+      - phonon-qt6-mpv-git
+      - kde-graphics-meta
+
+- systemd_service:
+    name: pipewire-pulse.socket
+    state: started
+    scope: user
+  become: true
+  become_user: arch
+  #environment:
+  #  XDG_RUNTIME_DIR: "/run/user/1000"
+
+
+- name: Install display manager
+  pacman:
+    name:
+      - ly
+      - lemurs
+
+- name: Config ly
+  lineinfile:
+    path: /etc/ly/config.ini
+    regexp: "^path ="
+    line: "path = null"
+
+- name: Enable ly
+  systemd_service:
+    name: ly@tty2.service
+    enabled: false
+
+- name: Enable lemurs
+  systemd_service:
+    name: lemurs.service
+    enabled: true
+
+- become: true
+  become_method: su
+  become_user: arch
+  command:
+    argv:
+      - paru
+      - -S
+      - --needed
+      - --noconfirm
+      - --skipreview
+      - zsh-fast-syntax-highlighting
+      - labwc-im-git
+      - sfwbar
+  when: false
+
+- become: true
+  become_user: arch
+  pacman:
+    executable: paru
+    extra_args: --skipreview
+    update_cache: false
+    name:
+      - zsh-fast-syntax-highlighting
+  when: false
+
+- name: Install neovim deps
+  pacman:
+    name:
+      - tree-sitter-cli
+      - ripgrep
+      - clang
+      - bash-language-server
+      - lua-language-server
+      - python-lsp-server
+      - pnpm

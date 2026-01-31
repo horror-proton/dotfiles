@@ -8,6 +8,12 @@
       - rsync
       - pacman-contrib
 
+- name: Install ucode
+  when: "'GenuineIntel' in ansible_facts['processor']"
+  pacman:
+    name:
+      - intel-ucode
+
 - name: Write pacman custom config
   copy:
     dest: /etc/pacman.d/custom.conf
@@ -41,4 +47,42 @@
     line: GRUB_CMDLINE_LINUX_DEFAULT="loglevel=7 sysrq_always_enabled=1 "
   notify: grub-mkconfig
 
+- name: Grub use text output
+  lineinfile:
+    path: /etc/default/grub
+    search_string: GRUB_TERMINAL_OUTPUT=
+    line: GRUB_TERMINAL_OUTPUT=console
+  notify: grub-mkconfig
+
+- name: Install Nvidia driver dkms
+  block:
+    - name: Test if kernel headers are installed
+      stat:
+        path: /usr/lib/modules/{{ ansible_facts['kernel'] }}/build
+    - pacman:
+        name:
+          - nvidia-open-dkms
+          - nvidia-utils
+
+# user:
+
+- pacman:
+    name:
+      - paru
+      - man-db
+
+      - zsh
+      - eza
+
+      - neovim
+      - python-pynvim
+      - zsh-autosuggestions
+
+- name: Config shell
+  user:
+    name: arch
+    shell: /usr/bin/zsh
+    append: true
+    groups: [wheel]
+    uid: 1000
 

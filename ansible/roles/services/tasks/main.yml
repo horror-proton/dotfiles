@@ -1,13 +1,31 @@
-- name: Store journal in tmpfs
-  copy:
-    dest: /etc/systemd/journald.conf.d/custom.conf
-    content: |
-      [Journal]
-      Storage=volatile
+- name: Set journal config
+  block:
+    - file:
+        path: /etc/systemd/journald.conf.d/
+        state: directory
+    - copy:
+        dest: /etc/systemd/journald.conf.d/custom.conf
+        content: |
+          [Journal]
+          Storage=volatile
+          ForwardToConsole=yes
+          TTYPath=/dev/tty12
+
+- name: Set hibernate action
+  block:
+    - file:
+        path: /etc/systemd/logind.conf.d
+        state: directory
+    - copy:
+        dest: /etc/systemd/logind.conf.d/custom.conf
+        content: |
+          [Login]
+          HandleLidSwitchExternalPower=ignore
 
 - pacman:
     name:
       - pacman-contrib
+      - btrfs-progs
 
 - name: Paccache keep one
   lineinfile:
@@ -23,3 +41,20 @@
     name: fstrim.timer
     enabled: true
     state: started
+
+
+# debug:
+
+- name: Install debugging tools
+  pacman:
+    name:
+      - strace
+      - perf
+      - gdb
+      - debuginfod
+      - bcc-tools
+
+- copy:
+    dest: /etc/sysctl.d/10-perf.conf
+    content: |
+      kernel.perf_event_paranoid = -1
