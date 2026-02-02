@@ -22,6 +22,19 @@
           [Login]
           HandleLidSwitchExternalPower=ignore
 
+- name: Limit coredump
+  block:
+    - file:
+        path: /etc/systemd/coredump.conf.d
+        state: directory
+    - copy:
+        dest: /etc/systemd/coredump.conf.d/custom.conf
+        content: |
+          [Coredump]
+          ProcessSizeMax={{ (ansible_facts['memtotal_mb'] / 4) | int }}M
+          EnterNamespace=yes
+          MaxUse={{ ansible_facts['memtotal_mb'] / 2 | int }}M
+
 - pacman:
     name:
       - pacman-contrib
@@ -41,7 +54,6 @@
     name: fstrim.timer
     enabled: true
     state: started
-
 
 # debug:
 

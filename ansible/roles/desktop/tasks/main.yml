@@ -7,9 +7,10 @@
       - nvtop
       - ncdu
 
+      - ttf-sarasa-gothic
       - ttf-nerd-fonts-symbols-mono
       - ttf-nerd-fonts-symbols
-      - noto-fonts-emoji 
+      - noto-fonts-emoji
 
       - fcitx5-chinese-addons
       - fcitx5-configtool
@@ -36,6 +37,17 @@
       - phonon-qt6-mpv-git
       - kde-graphics-meta
 
+      - p7zip-natspec
+
+      - slirp4netns
+      - socat
+      - bind
+
+- name: Install KDE
+  pacman:
+    name: [plasma-desktop]
+  when: false
+
 - systemd_service:
     name: pipewire-pulse.socket
     state: started
@@ -45,28 +57,75 @@
   #environment:
   #  XDG_RUNTIME_DIR: "/run/user/1000"
 
-
-- name: Install display manager
-  pacman:
-    name:
-      - ly
-      - lemurs
-
 - name: Config ly
-  lineinfile:
-    path: /etc/ly/config.ini
-    regexp: "^path ="
-    line: "path = null"
+  when: false
+  block:
+    - pacman:
+        name: [ly]
+    - lineinfile:
+        path: /etc/ly/config.ini
+        regexp: "^path ="
+        line: "path = null"
+    - systemd_service:
+        name: display-manager.service
+        enabled: false
+    - systemd_service:
+        name: ly@tty2.service
+        enabled: true
 
-- name: Enable ly
-  systemd_service:
-    name: ly@tty2.service
-    enabled: false
+- name: Config lemurs
+  when: false
+  block:
+    - pacman:
+        name: [lemurs]
+    - lineinfile:
+        path: /etc/lemurs/config.toml
+        regexp: "^main_log_path ="
+        line: main_log_path = "/run/lemurs.log"
+    - systemd_service:
+        name: lemurs.service
+        enabled: true
+        force: true
 
-- name: Enable lemurs
-  systemd_service:
-    name: lemurs.service
-    enabled: true
+- name: Config lightdm
+  block:
+    - pacman:
+        name: [lightdm, lightdm-gtk-greeter]
+    - group:
+        name: autologin
+        system: true
+    - user:
+        append: true
+        name: arch
+        groups: [autologin]
+    - copy:
+        dest: /etc/lightdm/lightdm-custom.conf
+        content: |
+          [LightDM]
+          run-directory=/run/lightdm
+          [Seat:*]
+          session-wrapper=/etc/lightdm/Xsession
+          autologin-user=arch
+          autologin-user-timeout=10
+          autologin-session=niri
+    - file:
+        path: /etc/systemd/system/lightdm.service.d
+        state: directory
+    - copy:
+        dest: /etc/systemd/system/lightdm.service.d/custom.conf
+        content: |
+          [Unit]
+          ##ACTION=="add", SUBSYSTEM=="drm", KERNEL=="card[0-9]*", TAG+="systemd"
+          #Requires=dev-dri-card0.device dev-dri-card1.device
+          #After=dev-dri-card0.device dev-dri-card1.device
+          [Service]
+          ExecStart=
+          ExecStart=/usr/bin/lightdm --config=/etc/lightdm/lightdm-custom.conf --log-dir=/tmp/lightdm
+          ExecStartPre=/usr/bin/bash -c 'until [[ $(cat /sys/module/nvidia_drm/initstate) == live ]]; do sleep 1; done; sleep 1'
+    - systemd_service:
+        name: lightdm.service
+        enabled: true
+        force: true
 
 - become: true
   become_method: su

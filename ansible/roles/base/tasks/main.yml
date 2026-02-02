@@ -25,6 +25,7 @@
       Color
       VerbosePkgLists
       ParallelDownloads = 10
+      DownloadUser = root
 
 - name: Apply pacman custom config
   register: alcn
@@ -36,14 +37,14 @@
   when: alcn.changed
   pacman:
     update_cache: true
-    name: [ archlinuxcn-keyring ]
+    name: [archlinuxcn-keyring]
 
 # kernel:
 
 - name: Grub kernel params
   lineinfile:
     path: /etc/default/grub
-    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
+    regexp: "^GRUB_CMDLINE_LINUX_DEFAULT="
     line: GRUB_CMDLINE_LINUX_DEFAULT="loglevel=7 sysrq_always_enabled=1 "
   notify: grub-mkconfig
 
@@ -73,6 +74,7 @@
 
       - zsh
       - eza
+      - direnv
 
       - neovim
       - python-pynvim
@@ -85,4 +87,3 @@
     append: true
     groups: [wheel]
     uid: 1000
-
