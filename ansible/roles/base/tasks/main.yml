@@ -18,6 +18,8 @@
   copy:
     dest: /etc/pacman.d/custom.conf
     content: |
+      [multilib]
+      Server = https://mirrors.bfsu.edu.cn/archlinux/$repo/os/$arch
       [archlinuxcn]
       # Server = https://repo.archlinuxcn.org/$arch
       Server = https://mirrors.bfsu.edu.cn/archlinuxcn/$arch
@@ -71,6 +73,7 @@
     name:
       - paru
       - man-db
+      - wget
 
       - zsh
       - eza

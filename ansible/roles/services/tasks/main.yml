@@ -45,6 +45,18 @@
     path: /etc/conf.d/pacman-contrib
     line: PACCACHE_ARGS=-k1
 
+- name: Use systemd-resolved
+  block:
+    - systemd_service:
+        name: systemd-resolved.service
+        enabled: true
+        state: started
+    - file:
+        src: /run/systemd/resolve/stub-resolv.conf
+        dest: /etc/resolv.conf
+        state: link
+        force: true
+
 - systemd_service:
     name: paccache.timer
     enabled: true
@@ -64,7 +76,7 @@
       - perf
       - gdb
       - debuginfod
-      - bcc-tools
+      - bcc-libbpf-tools
 
 - copy:
     dest: /etc/sysctl.d/10-perf.conf
