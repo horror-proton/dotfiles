@@ -1,0 +1,34 @@
+[connection]
+id=wg0
+type=wireguard
+interface-name=wg0
+
+[wireguard]
+private-key={{ wg_private_key }}
+private-key-flags=0
+{% if wg_listen_port is defined %}
+listen-port={{ wg_listen_port }}
+{% endif %}
+
+{% for host in groups['wg_peers'] %}
+{% if host != inventory_hostname %}  {# Skip self #}
+
+# {{ host }}
+[wireguard-peer.{{ hostvars[host]['wg_public_key'] }}]
+allowed-ips={{ hostvars[host]['wg_allowed_ips'] }}
+{% if hostvars[host]['wg_endpoint'] is defined %}
+endpoint={{ hostvars[host]['wg_endpoint'] }}
+{% endif %}
+{% if hostvars[host]['wg_persistent_keepalive'] is defined %}
+persistent-keepalive={{ hostvars[host]['wg_persistent_keepalive'] }}
+{% endif %}
+
+{% endif %}
+{% endfor %}
+
+[ipv4]
+address1={{ wg_ipv4 }}
+method=manual
+
+[ipv6]
+method=disabled

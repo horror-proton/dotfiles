@@ -1,0 +1,15 @@
+- name: Wireguard
+  hosts: wg_peers
+  become: true
+  tasks:
+    - template:
+        src: templates/wg0.nmconnection.j2
+        dest: /etc/NetworkManager/system-connections/wg0.nmconnection
+      when: wg_method == "network_manager"
+      notify:
+        - nm
+
+  handlers:
+    - name: reload-nm
+      listen: nm
+      command: nmcli connection reload && nmcli connection up wg0

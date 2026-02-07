@@ -2,3 +2,34 @@ all:
   hosts:
     localhost:
       ansible_connection: local
+  children:
+    wg_peers:
+      hosts:
+        mechrevo2:
+          ansible_host: localhost
+          ansible_connection: local
+          wg_method: network_manager
+          wg_ipv4: 10.114.51.5/24
+          wg_allowed_ips: 10.114.51.5/32
+          wg_private_key:
+          wg_public_key:
+        aorus:
+          ansible_host: aorus
+          wg_method: network_manager
+          wg_ipv4: 10.114.51.6/24
+          wg_allowed_ips: 10.114.51.6/32
+          wg_private_key:
+          wg_public_key:
+          wg_listen_port: 51806
+        a52b:
+          ansible_host: a52b
+          ansible_user: admin
+          wg_method: systemd
+          wg_ipv4: 10.114.51.10/24
+          wg_allowed_ips: 10.114.51.10/32
+          wg_private_key:
+          wg_public_key:
+          wg_endpoint:
+          wg_listen_port: 51820
+          wg_persistent_keepalive: 25
+
