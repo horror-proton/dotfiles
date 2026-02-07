@@ -28,6 +28,8 @@
       - polkit-kde-agent
       - xwayland-satellite
       - dunst
+      - libinput-tools
+      - brightnessctl
 
       - breeze
       - breeze-gtk
