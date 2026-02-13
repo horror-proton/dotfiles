@@ -1,0 +1,39 @@
+- name: Btrbk
+  hosts: localhost
+  become: true
+  tasks:
+    - pacman:
+        name: [btrbk, mbuffer]
+    - copy:
+        dest: /etc/btrbk/btrbk.conf
+        content: |
+          transaction_log         /dev/stderr
+          ssh_identity            /home/arch/.ssh/id_rsa
+          ssh_user                arch
+          backend_local_user      btrfs-progs-sudo
+          backend_remote          btrfs-progs-sudo
+          snapshot_dir            _btrbk_snap
+          incremental             yes
+          lockfile                /run/btrbk.lock
+
+          snapshot_preserve       5d
+          target_preserve         no
+          target_preserve_min     latest
+
+          target ssh://aorus/mnt/fx/{{ ansible_facts['machine_id'] }}/
+
+          volume /
+            subvolume home/arch/projects/
+            subvolume home/arch/.config/
+            subvolume home/arch/
+    - block:
+      - file:
+          path: /etc/systemd/system/btrbk.service.d
+          state: directory
+      - copy:
+          dest: /etc/systemd/system/btrbk.service.d/custom.conf
+          content: |
+            [Service]
+            ExecStart=
+            ExecStart=/usr/bin/btrbk -v --progress run
+
