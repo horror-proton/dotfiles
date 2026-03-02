@@ -164,3 +164,14 @@
       - lua-language-server
       - python-lsp-server
       - pnpm
+
+- block:
+    - pacman:
+        name:
+          - libva-utils
+          - libva-nvidia-driver # LIBVA_DRIVER_NAME=nvidia
+    - when: "'GenuineIntel' in ansible_facts['processor']"
+      pacman:
+        name:
+          - intel-media-driver
+          - intel-gpu-tools

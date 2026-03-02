@@ -82,3 +82,14 @@
     dest: /etc/sysctl.d/10-perf.conf
     content: |
       kernel.perf_event_paranoid = -1
+
+- name: Disable tmpfs quota
+  block:
+    - file:
+        path: /etc/systemd/system/tmp.mount.d
+        state: directory
+    - copy:
+        dest: /etc/systemd/system/tmp.mount.d/custom.conf
+        content: |
+          [Mount]
+          Options=mode=1777,strictatime,nosuid,nodev,size=50%%,nr_inodes=1m
