@@ -6,6 +6,10 @@
       - htop
       - nvtop
       - ncdu
+      - glances
+      - sysstat
+      - iotop-c
+      - iftop
 
       - ttf-sarasa-gothic
       - ttf-nerd-fonts-symbols-mono
@@ -164,6 +168,11 @@
       - lua-language-server
       - python-lsp-server
       - pnpm
+
+      - python-rope
+      - yapf
+      - python-whatthepatch
+      - python-pyflakes
 
 - block:
     - pacman:
