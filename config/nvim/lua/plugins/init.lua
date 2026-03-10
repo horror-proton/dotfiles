@@ -324,7 +324,13 @@ return {
         config = true,
     },
 
-    { 'github/copilot.vim' },
+    {
+        'github/copilot.vim',
+        config = function()
+            vim.g.copilot_version = false
+            -- vim.g.copilot_proxy = 'socks5h://localhost:7897'
+        end,
+    },
 
     { 'nvim-tree/nvim-web-devicons' },
 
