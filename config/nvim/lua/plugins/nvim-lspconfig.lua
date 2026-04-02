@@ -1,9 +1,21 @@
 -- Mappings.
--- See `:help vim.diagnostic.*` for documentation on any of the below functions
+
+--- @param opts? vim.diagnostic.JumpOpts
+local function jump_prev(opts)
+    vim.diagnostic.jump({ diagnostic = vim.diagnostic.get_prev(opts) })
+end
+
+--- @param opts? vim.diagnostic.JumpOpts
+local function jump_next(opts)
+    vim.diagnostic.jump({ diagnostic = vim.diagnostic.get_next(opts) })
+end
+
 local opts = { noremap = true, silent = true }
 vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+vim.keymap.set('n', '[d', jump_prev, opts)
+vim.keymap.set('n', ']d', jump_next, opts)
+vim.keymap.set('n', '[e', function() jump_prev({ severity = vim.diagnostic.severity.ERROR }) end, opts)
+vim.keymap.set('n', ']e', function() jump_next({ severity = vim.diagnostic.severity.ERROR }) end, opts)
 vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -153,7 +165,15 @@ if pcall(require, 'lazy') then
         table.insert(nvim_runtime, vim.fs.normalize(lazy_root .. '/' .. dir))
     end
 end
-vim.lsp.config('lua_ls', {
+
+--- @param name string
+--- @param cfg vim.lsp.Config
+local function config(name, cfg)
+    vim.lsp.config(name, cfg)
+    vim.lsp.enable(name)
+end
+
+config('lua_ls', {
     on_attach = attach,
     capabilities = capabilities,
     settings = {
@@ -207,7 +227,7 @@ local clangd_cmd =
     or
     clangd_argv
 
-vim.lsp.config('clangd', {
+config('clangd', {
     on_attach = attach,
     capabilities = { offsetEncoding = 'utf-16' },
     root_dir = function(fname)
@@ -292,7 +312,7 @@ require("clangd_extensions").setup {
     },
 }
 
-vim.lsp.config('rust_analyzer', {
+config('rust_analyzer', {
     on_attach = attach,
     capabilities = capabilities,
     settings = {
@@ -316,7 +336,7 @@ vim.lsp.config('rust_analyzer', {
 -- paru -S python-lsp-server
 -- paru -S yapf python-whatthepatch python-toml
 -- paru -S python-pycodestyle
-vim.lsp.config('pylsp', {
+config('pylsp', {
     on_attach = attach,
     capabilities = capabilities,
     settings = {
@@ -331,14 +351,24 @@ vim.lsp.config('pylsp', {
     cmd = { "pylsp", "-v" },
 })
 
-vim.lsp.config('qmlls', {
+config('qmlls', {
     cmd = { 'qmlls6', '--log-file', '/dev/stderr' }
 })
 
 -- Enable some language servers with the additional completion capabilities offered by nvim-cmp
-local servers = { 'cmake', 'bashls', 'hls', 'ts_ls', 'jsonls', 'zls', 'svelte' }
+local servers = {
+    'cmake',
+    'bashls',
+    'hls',
+    'ts_ls',
+    'jsonls',
+    'zls',
+    'svelte',
+    'gopls',
+    'yamlls',
+}
 for _, lsp in ipairs(servers) do
-    vim.lsp.config(lsp, {
+    config(lsp, {
         on_attach = attach,
         capabilities = capabilities,
     })
