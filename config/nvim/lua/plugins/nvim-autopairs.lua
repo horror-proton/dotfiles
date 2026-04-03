@@ -5,4 +5,10 @@ cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
 local Rule = require('nvim-autopairs.rule')
 local npairs = require('nvim-autopairs')
 local cond = require('nvim-autopairs.conds')
+
 npairs.add_rule(Rule("<", ">", "cpp"):with_pair(cond.not_before_regex("[%s<]")))
+
+-- ignored_next_char = $
+npairs.add_rule(Rule("{", "}", "tex"))
+npairs.add_rule(Rule("(", ")", "tex"))
+npairs.add_rule(Rule("(", ")", "tex"))
