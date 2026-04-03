@@ -1,5 +1,5 @@
 vim.cmd([[
-imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>' 
+imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>'
 inoremap <silent> <S-Tab> <cmd>lua require'luasnip'.jump(-1)<Cr>
 snoremap <silent> <Tab> <cmd>lua require('luasnip').jump(1)<Cr>
 snoremap <silent> <S-Tab> <cmd>lua require('luasnip').jump(-1)<Cr>
@@ -7,6 +7,7 @@ imap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' 
 smap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
 ]])
 
+---@type LuaSnip
 local ls = require("luasnip")
 local s = ls.snippet
 local sn = ls.snippet_node
@@ -45,3 +46,39 @@ ls.add_snippets("diff", {
         t({ "", "> " }),
     }),
 }, { type = "autosnippets" })
+
+ls.add_snippets("tex", {
+    s([[\begin]], {
+        t([[\begin{]]),
+        i(1),
+        t({ "}", "    " }),
+        i(2),
+        t({ "", [[\end{]] }),
+        rep(1),
+        t([[}]]),
+    }),
+    s([[\fr]], {
+        t([[\frac{]]),
+        i(1),
+        t("}{"),
+        i(2),
+        t("}"),
+    }),
+    s([[$]], {
+        t("$"), i(1), t("$")
+    }),
+}, { type = "autosnippets" })
+
+
+-- https://github.com/L3MON4D3/LuaSnip/issues/258
+vim.api.nvim_create_autocmd('ModeChanged', {
+    pattern = '*',
+    callback = function()
+        if ((vim.v.event.old_mode == 's' and vim.v.event.new_mode == 'n') or vim.v.event.old_mode == 'i')
+            and require('luasnip').session.current_nodes[vim.api.nvim_get_current_buf()]
+            and not require('luasnip').session.jump_active
+        then
+            require('luasnip').unlink_current()
+        end
+    end
+})

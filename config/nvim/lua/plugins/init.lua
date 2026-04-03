@@ -92,18 +92,6 @@ return {
     },
 
     {
-        'SirVer/ultisnips',
-        config = function()
-            vim.cmd 'syntax enable'
-            vim.g.syntax = true
-            vim.g.UltiSnipsExpandTrigger = "<tab>"
-            vim.g.UltiSnipsJumpForwardTrigger = "<tab>"
-            vim.g.UltiSnipsJumpBackwardTrigger = "<s-tab>"
-            vim.g.UltiSnipsEditSplit = "vertical"
-        end,
-    },
-
-    {
         'neovim/nvim-lspconfig',
         config = function() require('plugins.nvim-lspconfig') end,
         dependencies = {
