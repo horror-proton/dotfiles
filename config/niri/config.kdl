@@ -271,7 +271,9 @@ input {
 // This line starts waybar, a commonly used bar for Wayland compositors.
 // spawn-at-startup "waybar"
 spawn-at-startup "sfwbar"
-spawn-at-startup "/usr/lib/polkit-kde-authentication-agent-1"
+spawn-at-startup "/usr/lib/mate-polkit/polkit-mate-authentication-agent-1"
+spawn-at-startup "/usr/lib/xdg-desktop-portal-gnome"
+spawn-at-startup "/usr/lib/xdg-desktop-portal-gtk"
 spawn-at-startup "dunst"
 spawn-sh-at-startup "until setxkbmap -option $XKB_DEFAULT_OPTIONS; do sleep 10; done"
 

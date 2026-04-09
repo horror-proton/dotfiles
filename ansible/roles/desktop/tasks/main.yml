@@ -29,7 +29,8 @@
       - fuzzel
       - xdg-desktop-portal-gnome
       - xdg-desktop-portal-wlr
-      - polkit-kde-agent
+      # - polkit-kde-agent
+      - mate-polkit
       - xwayland-satellite
       - dunst
       - libinput-tools
