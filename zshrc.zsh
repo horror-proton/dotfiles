@@ -62,21 +62,28 @@ alias ls='ls --color=tty'
 
 # use --smart-group ?
 check_bin eza &&
-    alias l='eza -lah --group --icons --git --mounts --color-scale=size --time-style=iso' ||
+    alias l='eza -lah --group --icons --mounts --color-scale=size --time-style=iso' ||
     alias l='ls -lAh'
 alias ll='ls -lh'
 alias la='ls -lAh'
 
+check_bin direnv && eval "$(direnv hook zsh)"
+
 alias sudo='sudo '
-alias rm='rm --interactive=always'
+alias rm='rm --interactive=always --one-file-system'
 alias less='less -R'
 alias j='journalctl --follow'
 alias grep='grep --color=auto'
 alias ip='ip -color=auto'
+alias capzsh='sudo -E capsh --caps=cap_setuid,cap_setgid,cap_dac_override,cap_fowner,cap_setfcap,cap_chown+eip --user=arch --addamb=cap_dac_override,cap_fowner,cap_setfcap,cap_chown --shell=/usr/bin/zsh --'
+check_bin mtr && alias traceroute=mtr
 
 export LESSHISTFILE=/dev/null
-export LESS='-RiF --mouse'
+export LESS='-RiF'
 export SYSTEMD_LESS="$LESS"
+
+export MAKEPKG_GIT_CONFIG="$HOME"/.gitconfig
+export NIX_REMOTE=daemon
 
 check_bin ranger && alias ra='ranger'
 
