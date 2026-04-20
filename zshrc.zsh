@@ -76,7 +76,8 @@ alias j='journalctl --follow'
 alias grep='grep --color=auto'
 alias ip='ip -color=auto'
 alias capzsh='sudo -E capsh --caps=cap_setuid,cap_setgid,cap_dac_override,cap_fowner,cap_setfcap,cap_chown+eip --user=arch --addamb=cap_dac_override,cap_fowner,cap_setfcap,cap_chown --shell=/usr/bin/zsh --'
-check_bin mtr && alias traceroute=mtr
+# check_bin mtr && alias traceroute=mtr
+check_bin nexttrace && alias traceroute=nexttrace
 
 export LESSHISTFILE=/dev/null
 export LESS='-RiF'
