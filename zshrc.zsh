@@ -84,6 +84,7 @@ export LESS='-RiF'
 export SYSTEMD_LESS="$LESS"
 
 export MAKEPKG_GIT_CONFIG="$HOME"/.gitconfig
+export NVIM_LOG_FILE=/tmp/nvim/$UID/nvim.log
 export NIX_REMOTE=daemon
 
 check_bin ranger && alias ra='ranger'

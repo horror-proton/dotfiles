@@ -1,12 +1,34 @@
 local uv = vim.uv or vim.loop
 
 local files = {
-    vim.lsp.get_log_path(),
+    vim.lsp.log.get_filename(),
 }
 
 
-if not string.sub(vim.fn.expand('$NVIM_LOG_FILE'), 1, 5) ~= '/tmp/' then
-    table.insert(files, vim.fn.expand('$NVIM_LOG_FILE'))
+--if not string.sub(vim.fn.expand('$NVIM_LOG_FILE'), 1, 5) ~= '/tmp/' then
+--table.insert(files, vim.fn.expand('$NVIM_LOG_FILE'))
+--end
+
+local function _move_file(file, tmp_dir)
+    vim.fn.mkdir(vim.fs.dirname(file), 'p')
+    local fname = vim.fs.basename(file)
+    local tmpfile = vim.fs.joinpath(tmp_dir, fname)
+    if uv.fs_stat(file) then
+        local dest = uv.fs_readlink(file)
+        if dest and dest == tmpfile then
+            local newfile = assert(io.open(tmpfile, 'a+'))
+            -- newfile:write(string.format("Existing %s", tmpfile))
+            newfile:close()
+            return
+        end
+        assert(uv.fs_copyfile(file, tmpfile))
+    else
+        local newfile = assert(io.open(tmpfile, 'a+'))
+        newfile:write(string.format("Creating %s\n", tmpfile))
+        newfile:close()
+    end
+    os.remove(file)
+    assert(uv.fs_symlink(tmpfile, file))
 end
 
 local function move_log()
@@ -14,30 +36,11 @@ local function move_log()
         return true
     end
 
-    local tmp_dir = vim.fn.expand('/tmp/nvim/$UID')
+    local tmp_dir = vim.fn.expand('/tmp/nvim/' .. vim.uv.getuid())
     vim.fn.mkdir(tmp_dir, 'p')
 
     for _, file in ipairs(files) do
-        vim.fn.mkdir(vim.fs.dirname(file), 'p')
-        local fname = vim.fs.basename(file)
-        local tmpfile = vim.fs.joinpath(tmp_dir, fname)
-        if uv.fs_stat(file) then
-            local dest = uv.fs_readlink(file)
-            if dest and dest == tmpfile then
-                local newfile = assert(io.open(tmpfile, 'a+'))
-                newfile:write(string.format("Existing %s", tmpfile))
-                newfile:close()
-                goto continue
-            end
-            assert(uv.fs_copyfile(file, tmpfile))
-        else
-            local newfile = assert(io.open(tmpfile, 'a+'))
-            newfile:write(string.format("Creating %s", tmpfile))
-            newfile:close()
-        end
-        os.remove(file)
-        assert(uv.fs_symlink(tmpfile, file))
-        ::continue::
+        _move_file(file, tmp_dir)
     end
 end
 
@@ -56,5 +59,5 @@ do
         vim.fn.input(err)
         remove_log_link()
     end
-    vim.api.nvim_create_autocmd('VimLeave', { callback = function() remove_log_link() end, })
+    -- vim.api.nvim_create_autocmd('VimLeave', { callback = function() remove_log_link() end, })
 end
