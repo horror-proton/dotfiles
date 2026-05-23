@@ -1,21 +1,14 @@
 -- Mappings.
 
---- @param opts? vim.diagnostic.JumpOpts
-local function jump_prev(opts)
-    vim.diagnostic.jump({ diagnostic = vim.diagnostic.get_prev(opts) })
-end
-
---- @param opts? vim.diagnostic.JumpOpts
-local function jump_next(opts)
-    vim.diagnostic.jump({ diagnostic = vim.diagnostic.get_next(opts) })
-end
-
+--- @type vim.keymap.set.Opts
 local opts = { noremap = true, silent = true }
 vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
-vim.keymap.set('n', '[d', jump_prev, opts)
-vim.keymap.set('n', ']d', jump_next, opts)
-vim.keymap.set('n', '[e', function() jump_prev({ severity = vim.diagnostic.severity.ERROR }) end, opts)
-vim.keymap.set('n', ']e', function() jump_next({ severity = vim.diagnostic.severity.ERROR }) end, opts)
+vim.keymap.set('n', '[d', function() vim.diagnostic.jump({ count = -1 }) end, opts)
+vim.keymap.set('n', ']d', function() vim.diagnostic.jump({ count = 1 }) end, opts)
+vim.keymap.set('n', '[e', function() vim.diagnostic.jump({ count = -1, severity = vim.diagnostic.severity.ERROR }) end,
+    opts)
+vim.keymap.set('n', ']e', function() vim.diagnostic.jump({ count = 1, severity = vim.diagnostic.severity.ERROR }) end,
+    opts)
 vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 
 vim.api.nvim_create_autocmd('LspAttach', {
