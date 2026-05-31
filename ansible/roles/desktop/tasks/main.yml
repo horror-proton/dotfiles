@@ -27,6 +27,7 @@
       - foot
       - bat
       - fuzzel
+      - wl-clipboard
       - xdg-desktop-portal-gnome
       - xdg-desktop-portal-wlr
       # - polkit-kde-agent
@@ -63,6 +64,16 @@
   become_user: arch
   #environment:
   #  XDG_RUNTIME_DIR: "/run/user/1000"
+
+- name: hwdb keymap
+  copy:
+    dest: /etc/udev/hwdb.d/61-keyboard.hwdb
+    content: |
+      evdev:input:*
+        KEYBOARD_KEY_3a=esc    # Caps Lock (0x3a) becomes Escape
+        KEYBOARD_KEY_01=capslock  # Escape (0x01) becomes Caps Lock (optional)
+        KEYBOARD_KEY_70039=esc
+        KEYBOARD_KEY_70029=capslock
 
 - name: Config ly
   when: false
