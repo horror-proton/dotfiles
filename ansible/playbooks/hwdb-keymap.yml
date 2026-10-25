@@ -1,0 +1,15 @@
+- name: hwdb-keymapo
+  hosts: localhost
+  become: true
+  tasks:
+  - name: hwdb keymap
+    copy:
+      dest: /etc/udev/hwdb.d/61-keyboard.hwdb
+      content: |
+        evdev:input:*
+          KEYBOARD_KEY_3a=esc    # Caps Lock (0x3a) becomes Escape
+          KEYBOARD_KEY_01=capslock  # Escape (0x01) becomes Caps Lock (optional)
+          KEYBOARD_KEY_70039=esc
+          KEYBOARD_KEY_70029=capslock
+
+
