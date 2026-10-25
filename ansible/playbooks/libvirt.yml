@@ -1,0 +1,15 @@
+- name: Libvirt
+  hosts: localhost
+  become: true
+  tasks:
+    - pacman:
+        name: [libvirt, qemu-system-x86, qemu-img]
+        state: present
+    - user:
+        name: arch
+        groups: [qemu, libvirt]
+        append: true
+    - systemd:
+        name: libvirtd
+        state: started
+        enabled: true
